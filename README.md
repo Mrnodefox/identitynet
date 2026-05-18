@@ -187,11 +187,11 @@ Users can earn tokens through:
 3. **Attestations**: Provide attestations for other users
 4. **Referrals**: Earn tokens for referring new users (coming soon)
 
-Target: $10/day through identity verification services and reputation monetization.
+
 
 ## Architecture
 
-- **Framework**: FastAPI (modern, async, better than Flask)
+- **Framework**: FastAPI (modern, async)
 - **Storage**: IPFS (InterPlanetary File System) for decentralized data storage
 - **Database**: Local SQLite with SQLAlchemy ORM (user-controlled)
 - **Authentication**: Cryptographic keys (public/private key pairs)

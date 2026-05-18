@@ -1,10 +1,10 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
 class UserCreate(BaseModel):
     username: str
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     public_key: str
 
 class UserResponse(BaseModel):

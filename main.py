@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException, status, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
+from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 from datetime import datetime
 import hashlib
@@ -26,52 +28,71 @@ try:
 except ImportError:
     IPFS_AVAILABLE = False
 
-try:
-    from fastapi_secure_headers import SecureHeaders, secure_headers
-    SECURE_HEADERS_AVAILABLE = True
-except ImportError:
-    SECURE_HEADERS_AVAILABLE = False
+class SecureHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        
+        # Skip security headers for docs endpoint
+        if request.url.path in ["/docs", "/openapi.json", "/redoc"]:
+            return response
+        
+        # Security Headers
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Server"] = "IdentityNet"
+        
+        # Content Security Policy
+        csp = (
+            "default-src 'self'; "
+            "img-src 'self' data:; "
+            "script-src 'self'; "
+            "style-src 'self'; "
+            "connect-src 'self'; "
+            "font-src 'self'; "
+            "object-src 'none'; "
+            "media-src 'self'; "
+            "form-action 'self'; "
+            "frame-ancestors 'none'; "
+            "base-uri 'self'; "
+            "block-all-mixed-content; "
+            "upgrade-insecure-requests"
+        )
+        response.headers["Content-Security-Policy"] = csp
+        
+        # Permissions Policy
+        permissions_policy = (
+            "geolocation=(self), "
+            "microphone=(none), "
+            "camera=(none)"
+        )
+        response.headers["Permissions-Policy"] = permissions_policy
+        
+        return response
 
-app = FastAPI(title="IdentityNet API", version="1.0.0")
+# HTTPS/TLS Configuration with Let's Encrypt
+SSL_CERT_PATH = os.getenv("SSL_CERT_PATH", "/etc/letsencrypt/live/yourdomain.com/fullchain.pem")
+SSL_KEY_PATH = os.getenv("SSL_KEY_PATH", "/etc/letsencrypt/live/yourdomain.com/privkey.pem")
+FORCE_HTTPS = os.getenv("FORCE_HTTPS", "false").lower() == "true"
 
-if SECURE_HEADERS_AVAILABLE:
-    secure_headers = SecureHeaders(
-        hsts=True,
-        hsts_include_subdomains=True,
-        hsts_preload=True,
-        hsts_max_age=31536000,
-        csp=True,
-        csp_default-src="'self'",
-        csp_img-src="'self' data:",
-        csp_script-src="'self'",
-        csp_style-src="'self'",
-        csp_connect-src="'self'",
-        csp_font-src="'self'",
-        csp_object-src="'none'",
-        csp_media-src="'self'",
-        csp_form_action="'self'",
-        csp_frame_ancestors="'none'",
-        csp_base_uri="'self'",
-        csp_block_all_mixed_content=True,
-        csp_upgrade_insecure_requests=True,
-        referrer_policy=True,
-        referrer="strict-origin-when-cross-origin",
-        permissions_policy=True,
-        permissions_geolocation="'self'",
-        permissions_microphone="'none'",
-        permissions_camera="'none'",
-        x_content_type_options=True,
-        x_frame_options=True,
-        x_frame_options_option="DENY",
-        x_xss_protection=True,
-        x_xss_protection_option="1; mode=block",
-        server=True,
-        server_header="IdentityNet"
-    )
-    app.add_middleware(
-        BaseHTTPMiddleware,
-        dispatch=secure_headers
-    )
+# Request Signing Configuration
+API_PRIVATE_KEY = os.getenv("API_PRIVATE_KEY", secrets.token_hex(32))
+SIGNATURE_HEADER = "X-Signature"
+TIMESTAMP_HEADER = "X-Timestamp"
+SIGNATURE_TOLERANCE_SECONDS = 300  # 5 minutes
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    init_db()
+    yield
+    # Shutdown (if needed)
+
+app = FastAPI(title="IdentityNet API", version="1.0.0", lifespan=lifespan)
+
+app.add_middleware(SecureHeadersMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
@@ -81,23 +102,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# HTTPS/TLS Configuration with Let's Encrypt
-SSL_CERT_PATH = os.getenv("SSL_CERT_PATH", "/etc/letsencrypt/live/yourdomain.com/fullchain.pem")
-SSL_KEY_PATH = os.getenv("SSL_KEY_PATH", "/etc/letsencrypt/live/yourdomain.com/privkey.pem")
-FORCE_HTTPS = os.getenv("FORCE_HTTPS", "false").lower() == "true"
-
 if FORCE_HTTPS and os.path.exists(SSL_CERT_PATH) and os.path.exists(SSL_KEY_PATH):
     app.add_middleware(HTTPSRedirectMiddleware)
-
-# Request Signing Configuration
-API_PRIVATE_KEY = os.getenv("API_PRIVATE_KEY", secrets.token_hex(32))
-SIGNATURE_HEADER = "X-Signature"
-TIMESTAMP_HEADER = "X-Timestamp"
-SIGNATURE_TOLERANCE_SECONDS = 300  # 5 minutes
-
-@app.on_event("startup")
-async def startup_event():
-    init_db()
 
 def get_ipfs_client():
     if not IPFS_AVAILABLE:
@@ -133,7 +139,7 @@ def generate_did(public_key: str) -> str:
     hash_input = f"did:identitynet:{public_key}:{datetime.utcnow().isoformat()}"
     return f"did:identitynet:{hashlib.sha256(hash_input.encode()).hexdigest()[:32]}"
 
-def verify_request_signature(request: Request) -> bool:
+async def verify_request_signature(request: Request) -> bool:
     """Verify request signature using HMAC-SHA256"""
     try:
         signature = request.headers.get(SIGNATURE_HEADER)
@@ -178,7 +184,7 @@ def verify_request_signature(request: Request) -> bool:
 
 async def verify_signature_dependency(request: Request):
     """Dependency to verify request signature on protected endpoints"""
-    if not verify_request_signature(request):
+    if not await verify_request_signature(request):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or missing request signature"
@@ -400,14 +406,16 @@ if __name__ == "__main__":
     import uvicorn
     
     # SSL configuration for HTTPS/TLS with Let's Encrypt
-    ssl_context = None
+    ssl_keyfile = None
+    ssl_certfile = None
     if FORCE_HTTPS and os.path.exists(SSL_CERT_PATH) and os.path.exists(SSL_KEY_PATH):
-        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        ssl_context.load_cert_chain(SSL_CERT_PATH, SSL_KEY_PATH)
+        ssl_keyfile = SSL_KEY_PATH
+        ssl_certfile = SSL_CERT_PATH
     
     uvicorn.run(
         app, 
-        host="0.0.0.0", 
+        host="127.0.0.1", 
         port=8000,
-        ssl=ssl_context
+        ssl_keyfile=ssl_keyfile,
+        ssl_certfile=ssl_certfile
     )
