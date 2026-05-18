@@ -4,6 +4,28 @@ set -e
 
 echo "Installing IdentityNet..."
 
+# Check Android API level
+if [ -n "$TERMUX_VERSION" ]; then
+    API_LEVEL=$(getprop ro.build.version.sdk)
+    ANDROID_VERSION=$(getprop ro.build.version.release)
+    echo "Detected Android $ANDROID_VERSION (API level $API_LEVEL)"
+    
+    if [ "$API_LEVEL" -lt 21 ]; then
+        echo "ERROR: Android API level $API_LEVEL is not supported."
+        echo "Minimum required: Android 5.0 (API level 21)"
+        echo "Please update your Android version or use a newer device."
+        exit 1
+    elif [ "$API_LEVEL" -lt 23 ]; then
+        echo "WARNING: Android API level $API_LEVEL may have compatibility issues."
+        echo "Recommended: Android 6.0 (API level 23) or higher"
+        echo "Continuing installation..."
+    else
+        echo "Android version is compatible."
+    fi
+else
+    echo "Not running in Termux. Skipping Android API level check."
+fi
+
 # Update packages
 pkg update -y
 

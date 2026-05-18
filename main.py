@@ -1,8 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException, status, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
+from starlette.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -13,6 +16,7 @@ import os
 import hmac
 import ssl
 from typing import List, Optional
+from pathlib import Path
 
 from database import engine, get_db, init_db, User, Reputation, Attestation, TokenTransaction
 from schemas import (
@@ -91,6 +95,15 @@ async def lifespan(app: FastAPI):
     # Shutdown (if needed)
 
 app = FastAPI(title="IdentityNet API", version="1.0.0", lifespan=lifespan)
+
+# Mount static files
+static_dir = Path(__file__).parent / "static"
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+# Setup templates
+templates_dir = Path(__file__).parent / "static"
+templates = Jinja2Templates(directory=str(templates_dir))
 
 app.add_middleware(SecureHeadersMiddleware)
 
@@ -221,6 +234,23 @@ async def root():
         "description": "Decentralized Identity & Reputation System",
         "version": "1.0.0"
     }
+
+@app.get("/docs", include_in_schema=False)
+async def custom_docs():
+    """Serve custom Swagger UI with Tailwind and Bootstrap styling"""
+    static_dir = Path(__file__).parent / "static"
+    docs_file = static_dir / "docs.html"
+    
+    if docs_file.exists():
+        with open(docs_file, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        # Replace the template variable with the actual OpenAPI URL
+        html_content = html_content.replace("{{ openapi_url }}", app.openapi_url)
+        return HTMLResponse(content=html_content)
+    else:
+        # Fallback to default docs if custom template not found
+        from fastapi.openapi.docs import get_swagger_ui_html
+        return get_swagger_ui_html(openapi_url=app.openapi_url, title="IdentityNet API")
 
 @app.get("/generate-keys")
 async def generate_keys():
