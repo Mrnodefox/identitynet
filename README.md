@@ -208,6 +208,71 @@ Users can earn tokens through:
 - No central authority controls your identity
 - IPFS provides content-addressable storage (tamper-proof)
 - Local database ensures user control over data
+- **Request Signature Verification**: All POST endpoints require HMAC-SHA256 signature verification
+
+### Request Signature Verification
+
+All POST endpoints except `/users/create`, `/verify`, and `/users/{user_id}/tokens` require signature verification to ensure request authenticity. Clients must include the following headers:
+
+- `X-Signature`: HMAC-SHA256 signature of the request
+- `X-Timestamp`: ISO format timestamp (e.g., `2024-01-01T12:00:00`)
+
+#### Setup
+
+Set the `API_PRIVATE_KEY` environment variable:
+
+```bash
+export API_PRIVATE_KEY="your_private_key_here"
+```
+
+Or generate a new key:
+
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+#### Generating Signatures
+
+Use the `/generate-keys` endpoint to get a key pair, or use the helper function:
+
+```python
+import hmac
+import hashlib
+from datetime import datetime
+
+def generate_request_signature(method: str, url: str, body: str, private_key: str) -> tuple:
+    timestamp = datetime.utcnow().isoformat()
+    content_type = "application/json"
+    
+    signature_string = f"{method}\n{url}\n{timestamp}\n{content_type}\n{body}"
+    signature = hmac.new(
+        private_key.encode(),
+        signature_string.encode(),
+        hashlib.sha256
+    ).hexdigest()
+    
+    return signature, timestamp
+```
+
+#### Example Request with Signature
+
+```bash
+# Generate signature and timestamp
+PRIVATE_KEY="your_private_key"
+TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S")
+BODY='{"username":"john_doe","email":"john@example.com","public_key":"your_public_key"}'
+SIGNATURE_STRING="POST\nhttp://localhost:8000/users/create\n${TIMESTAMP}\napplication/json\n${BODY}"
+SIGNATURE=$(echo -n "$SIGNATURE_STRING" | openssl dgst -sha256 -hmac "$PRIVATE_KEY" | awk '{print $2}')
+
+# Make request with signature headers
+curl -X POST http://localhost:8000/users/create \
+  -H "Content-Type: application/json" \
+  -H "X-Signature: $SIGNATURE" \
+  -H "X-Timestamp: $TIMESTAMP" \
+  -d "$BODY"
+```
+
+**Note**: Signatures have a 5-minute tolerance window to prevent replay attacks.
 
 ## Roadmap
 

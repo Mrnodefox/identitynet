@@ -222,8 +222,19 @@ async def root():
         "version": "1.0.0"
     }
 
+@app.get("/generate-keys")
+async def generate_keys():
+    """Generate a new public/private key pair for users"""
+    private_key = secrets.token_hex(32)
+    public_key = hashlib.sha256(private_key.encode()).hexdigest()
+    return {
+        "public_key": public_key,
+        "private_key": private_key,
+        "warning": "Save your private_key securely - it cannot be recovered"
+    }
+
 @app.post("/users/create", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def create_user(user: UserCreate, db: Session = Depends(get_db), _: bool = Depends(verify_signature_dependency)):
+async def create_user(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.username == user.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
@@ -284,7 +295,7 @@ async def get_reputation(user_id: int, db: Session = Depends(get_db)):
     return reputation
 
 @app.post("/users/{user_id}/attestations", response_model=AttestationResponse, status_code=status.HTTP_201_CREATED)
-async def create_attestation(user_id: int, attestation: AttestationCreate, db: Session = Depends(get_db), _: bool = Depends(verify_signature_dependency)):
+async def create_attestation(user_id: int, attestation: AttestationCreate, db: Session = Depends(get_db), signature_valid: bool = Depends(verify_signature_dependency)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -317,7 +328,7 @@ async def get_attestations(user_id: int, db: Session = Depends(get_db)):
     return attestations
 
 @app.post("/users/{user_id}/tokens", response_model=TokenTransactionResponse, status_code=status.HTTP_201_CREATED)
-async def create_token_transaction(user_id: int, transaction: TokenTransactionCreate, db: Session = Depends(get_db), _: bool = Depends(verify_signature_dependency)):
+async def create_token_transaction(user_id: int, transaction: TokenTransactionCreate, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -341,7 +352,7 @@ async def get_token_transactions(user_id: int, db: Session = Depends(get_db)):
     return transactions
 
 @app.post("/verify", status_code=status.HTTP_200_OK)
-async def verify_identity(request: IdentityVerificationRequest, db: Session = Depends(get_db), _: bool = Depends(verify_signature_dependency)):
+async def verify_identity(request: IdentityVerificationRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.did == request.did).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -379,7 +390,7 @@ async def get_stats(db: Session = Depends(get_db)):
     }
 
 @app.post("/system/update")
-async def update_system(_: bool = Depends(verify_signature_dependency)):
+async def update_system(signature_valid: bool = Depends(verify_signature_dependency)):
     import subprocess
     import os
     

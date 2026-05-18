@@ -15,8 +15,13 @@ echo "Installing IPFS..."
 pkg install -y ipfs
 
 # Initialize IPFS
-echo "Initializing IPFS..."
-ipfs init
+echo "Checking IPFS initialization..."
+if [ -d ~/.ipfs ]; then
+    echo "IPFS already initialized. Skipping initialization to preserve existing keys."
+else
+    echo "Initializing IPFS..."
+    ipfs init
+fi
 
 # Clone repository
 echo "Cloning repository..."
