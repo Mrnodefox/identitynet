@@ -4,16 +4,28 @@ set -e
 
 echo "Installing IdentityNet..."
 
+# Load .env file if it exists
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
 # Check Android API level
 if [ -n "$TERMUX_VERSION" ]; then
-    API_LEVEL=$(getprop ro.build.version.sdk)
-    ANDROID_VERSION=$(getprop ro.build.version.release)
-    echo "Detected Android $ANDROID_VERSION (API level $API_LEVEL)"
+    if [ -n "$ANDROID_API_LEVEL" ] && [ -n "$ANDROID_VERSION" ]; then
+        API_LEVEL=$ANDROID_API_LEVEL
+        ANDROID_VERSION=$ANDROID_VERSION
+        echo "Using Android configuration from .env: Android $ANDROID_VERSION (API level $API_LEVEL)"
+    else
+        API_LEVEL=$(getprop ro.build.version.sdk 2>/dev/null || echo "0")
+        ANDROID_VERSION=$(getprop ro.build.version.release 2>/dev/null || echo "unknown")
+        echo "Detected Android $ANDROID_VERSION (API level $API_LEVEL)"
+    fi
     
     if [ "$API_LEVEL" -lt 21 ]; then
         echo "ERROR: Android API level $API_LEVEL is not supported."
         echo "Minimum required: Android 5.0 (API level 21)"
         echo "Please update your Android version or use a newer device."
+        echo "Or set ANDROID_API_LEVEL in .env file if detection failed."
         exit 1
     elif [ "$API_LEVEL" -lt 23 ]; then
         echo "WARNING: Android API level $API_LEVEL may have compatibility issues."

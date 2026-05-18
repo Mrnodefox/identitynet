@@ -17,6 +17,10 @@ import hmac
 import ssl
 from typing import List, Optional
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from database import engine, get_db, init_db, User, Reputation, Attestation, TokenTransaction
 from schemas import (
