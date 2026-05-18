@@ -19,7 +19,7 @@ A revolutionary decentralized identity and reputation system where users own and
 ### Termux (Android)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/identitynet/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/Mrnodefox/identitynet/main/install.sh | bash
 ```
 
 ### Manual Installation
