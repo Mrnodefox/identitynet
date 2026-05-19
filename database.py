@@ -37,6 +37,8 @@ class User(Base):
     ipfs_hash = Column(String(255), unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     is_verified = Column(Boolean, default=False)
+    node_id = Column(String(32), index=True)  # Node that created this user
+    synced = Column(Boolean, default=False)  # Whether synced to global registry
     
     reputation = relationship("Reputation", back_populates="user", uselist=False)
     attestations = relationship("Attestation", back_populates="user")

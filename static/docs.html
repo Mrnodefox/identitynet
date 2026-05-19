@@ -6,77 +6,183 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #f5f7fa;
       min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     .swagger-ui {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      margin: 20px;
-      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 20px auto;
+      max-width: 1200px;
+      padding: 0;
+      overflow: hidden;
     }
     .swagger-ui .topbar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 12px 12px 0 0;
+      display: none;
     }
     .swagger-ui .info {
-      margin: 20px 0;
+      margin: 0;
+      padding: 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px 16px 0 0;
     }
     .swagger-ui .info .title {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
-      color: #667eea;
+      color: white;
+      margin-bottom: 8px;
+    }
+    .swagger-ui .info .description {
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
     }
     .swagger-ui .opblock {
-      border-radius: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      margin: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e5e7eb;
     }
     .swagger-ui .opblock .opblock-summary {
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 16px 20px;
+      background: #fafafa;
     }
     .swagger-ui .opblock .opblock-summary-description {
       font-size: 14px;
+      color: #6b7280;
+    }
+    .swagger-ui .opblock .opblock-summary-method {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .swagger-ui .opblock .opblock-summary-path {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+    }
+    .swagger-ui .opblock.get .opblock-summary-method {
+      background: #10b981;
+      color: white;
+    }
+    .swagger-ui .opblock.post .opblock-summary-method {
+      background: #3b82f6;
+      color: white;
+    }
+    .swagger-ui .opblock.put .opblock-summary-method {
+      background: #f59e0b;
+      color: white;
+    }
+    .swagger-ui .opblock.delete .opblock-summary-method {
+      background: #ef4444;
+      color: white;
     }
     .swagger-ui .btn {
-      border-radius: 6px;
+      border-radius: 8px;
       font-weight: 500;
+      padding: 10px 20px;
+      transition: all 0.2s;
+    }
+    .swagger-ui .btn.execute {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+    }
+    .swagger-ui .btn.execute:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .swagger-ui .parameters-container,
+    .swagger-ui .responses-container {
+      padding: 20px;
     }
     .swagger-ui .parameters th,
     .swagger-ui .parameters td {
-      padding: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .swagger-ui .parameters th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+      font-size: 13px;
+    }
+    .swagger-ui .parameter__name {
+      font-weight: 500;
+      color: #374151;
+    }
+    .swagger-ui .parameter__in {
+      color: #6b7280;
+      font-size: 12px;
     }
     .swagger-ui .model-box {
-      background: #f8f9fa;
-      border-radius: 6px;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .swagger-ui .model-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
     }
     .swagger-ui .scheme-container {
-      background: #f8f9fa;
+      background: #f9fafb;
       border-radius: 8px;
-      padding: 15px;
-      margin: 15px 0;
+      padding: 16px;
+      margin: 16px;
     }
     .swagger-ui .loading-container {
-      padding: 40px;
+      padding: 60px;
+      text-align: center;
     }
     .swagger-ui .response-col-status {
       font-weight: 600;
-    }
-    .swagger-ui .tab li:first-child {
-      padding-left: 0;
+      color: #10b981;
     }
     .swagger-ui .tab li {
-      padding: 0 10px;
+      padding: 0 4px;
+    }
+    .swagger-ui .tab li button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .swagger-ui .tab li button.active {
+      background: #667eea;
+      color: white;
     }
     .swagger-ui .execute-wrapper {
-      padding: 10px 0;
+      padding: 16px 0;
+    }
+    .swagger-ui textarea {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+    }
+    .swagger-ui input[type="text"],
+    .swagger-ui input[type="password"] {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+    .swagger-ui select {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      font-size: 14px;
     }
     .custom-header {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      margin: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 20px auto;
+      max-width: 1200px;
       padding: 30px;
     }
     .custom-header h1 {
@@ -85,6 +191,95 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       font-weight: 800;
+      font-size: 32px;
+    }
+    .quick-actions {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 20px auto;
+      max-width: 1200px;
+      padding: 24px;
+    }
+    .quick-action-card {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: #374151;
+      transition: all 0.2s;
+      border: 1px solid #e5e7eb;
+    }
+    .quick-action-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-color: #667eea;
+    }
+    .quick-action-card .icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .quick-action-card .title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .quick-action-card .description {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-dialog {
+      background: white;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #374151;
+    }
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #6b7280;
+    }
+    .modal-body {
+      padding: 20px;
+    }
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
   </style>
 </head>
@@ -93,16 +288,358 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-8">
-          <h1 class="display-4">IdentityNet API</h1>
-          <p class="lead text-muted">Decentralized Identity & Reputation System</p>
+          <h1>IdentityNet API</h1>
+          <p class="text-muted mb-0">Decentralized Identity & Reputation System</p>
         </div>
         <div class="col-md-4 text-end">
-          <a href="/" class="btn btn-primary btn-lg me-2">Home</a>
-          <a href="/docs" class="btn btn-outline-primary btn-lg">Docs</a>
+          <a href="/" class="btn btn-primary me-2">Home</a>
+          <a href="/docs" class="btn btn-outline-primary">Docs</a>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="quick-actions">
+    <h5 class="mb-4">Quick Actions</h5>
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('createUserModal')">
+          <div class="icon">👤</div>
+          <div class="title">Create User</div>
+          <div class="description">Register a new identity</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('verifyIdentityModal')">
+          <div class="icon">✅</div>
+          <div class="title">Verify Identity</div>
+          <div class="description">Verify user identity</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="generateKeys()">
+          <div class="icon">🔑</div>
+          <div class="title">Generate Keys</div>
+          <div class="description">Create key pair</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="getStats()">
+          <div class="icon">📊</div>
+          <div class="title">View Stats</div>
+          <div class="description">System statistics</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('getUserByIdModal')">
+          <div class="icon">🔍</div>
+          <div class="title">Get User by ID</div>
+          <div class="description">Find user by ID</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('getUserByDidModal')">
+          <div class="icon">🆔</div>
+          <div class="title">Get User by DID</div>
+          <div class="description">Find user by DID</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('getReputationModal')">
+          <div class="icon">⭐</div>
+          <div class="title">Get Reputation</div>
+          <div class="description">View user reputation</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('createAttestationModal')">
+          <div class="icon">📝</div>
+          <div class="title">Create Attestation</div>
+          <div class="description">Add user attestation</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('getAttestationsModal')">
+          <div class="icon">📋</div>
+          <div class="title">Get Attestations</div>
+          <div class="description">View user attestations</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('createTransactionModal')">
+          <div class="icon">💰</div>
+          <div class="title">Create Transaction</div>
+          <div class="description">Add token transaction</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="openModal('getTransactionsModal')">
+          <div class="icon">💳</div>
+          <div class="title">Get Transactions</div>
+          <div class="description">View user transactions</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="systemUpdate()">
+          <div class="icon">🔄</div>
+          <div class="title">System Update</div>
+          <div class="description">Update the system</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="createUserModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create User</h5>
+          <button type="button" class="btn-close" onclick="closeModal('createUserModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="createUserForm">
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email (optional)</label>
+              <input type="email" class="form-control" id="email">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Public Key</label>
+              <input type="text" class="form-control" id="publicKey" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createUserModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="createUser()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="verifyIdentityModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Verify Identity</h5>
+          <button type="button" class="btn-close" onclick="closeModal('verifyIdentityModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="verifyIdentityForm">
+            <div class="mb-3">
+              <label class="form-label">DID</label>
+              <input type="text" class="form-control" id="verifyDid" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Verification Type</label>
+              <input type="text" class="form-control" id="verificationType" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('verifyIdentityModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="verifyIdentity()">Verify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="getUserByIdModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Get User by ID</h5>
+          <button type="button" class="btn-close" onclick="closeModal('getUserByIdModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">User ID</label>
+            <input type="number" class="form-control" id="userId" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('getUserByIdModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="getUserById()">Get User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="getUserByDidModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Get User by DID</h5>
+          <button type="button" class="btn-close" onclick="closeModal('getUserByDidModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">DID</label>
+            <input type="text" class="form-control" id="userDid" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('getUserByDidModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="getUserByDid()">Get User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="getReputationModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Get Reputation</h5>
+          <button type="button" class="btn-close" onclick="closeModal('getReputationModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">User ID</label>
+            <input type="number" class="form-control" id="reputationUserId" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('getReputationModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="getReputation()">Get Reputation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="createAttestationModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Attestation</h5>
+          <button type="button" class="btn-close" onclick="closeModal('createAttestationModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="createAttestationForm">
+            <div class="mb-3">
+              <label class="form-label">User ID</label>
+              <input type="number" class="form-control" id="attestationUserId" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Attestation Type</label>
+              <input type="text" class="form-control" id="attestationType" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Data (optional)</label>
+              <textarea class="form-control" id="attestationData"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Signature</label>
+              <input type="text" class="form-control" id="attestationSignature" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createAttestationModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="createAttestation()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="getAttestationsModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Get Attestations</h5>
+          <button type="button" class="btn-close" onclick="closeModal('getAttestationsModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">User ID</label>
+            <input type="number" class="form-control" id="attestationsUserId" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('getAttestationsModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="getAttestations()">Get Attestations</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="createTransactionModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Transaction</h5>
+          <button type="button" class="btn-close" onclick="closeModal('createTransactionModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="createTransactionForm">
+            <div class="mb-3">
+              <label class="form-label">User ID</label>
+              <input type="number" class="form-control" id="transactionUserId" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Transaction Type</label>
+              <input type="text" class="form-control" id="transactionType" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Amount</label>
+              <input type="number" step="0.01" class="form-control" id="transactionAmount" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description (optional)</label>
+              <textarea class="form-control" id="transactionDescription"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createTransactionModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="createTransaction()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="getTransactionsModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Get Transactions</h5>
+          <button type="button" class="btn-close" onclick="closeModal('getTransactionsModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">User ID</label>
+            <input type="number" class="form-control" id="transactionsUserId" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('getTransactionsModal')">Close</button>
+          <button type="button" class="btn btn-primary" onclick="getTransactions()">Get Transactions</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Modal -->
+  <div id="resultModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="resultTitle">Result</h5>
+          <button type="button" class="btn-close" onclick="closeModal('resultModal')">&times;</button>
+        </div>
+        <div class="modal-body" id="resultContent">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('resultModal')">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="swagger-ui"></div>
   <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
   <script>
@@ -115,18 +652,287 @@
         SwaggerUIBundle.SwaggerUIStandalonePreset
       ],
       layout: "StandaloneLayout",
-      defaultModelsExpandDepth: 1,
-      defaultModelExpandDepth: 1,
+      defaultModelsExpandDepth: 0,
+      defaultModelExpandDepth: 0,
       docExpansion: "list",
       filter: true,
-      showRequestHeaders: true,
+      showRequestHeaders: false,
       tryItOutEnabled: true,
       persistAuthorization: true,
       syntaxHighlight: {
-        activate: true,
-        theme: "monokai"
-      }
+        activate: false
+      },
+      plugins: []
     });
+
+    // Modal functions
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    function showResult(data, title = 'Result') {
+      document.getElementById('resultTitle').textContent = title;
+      const content = formatResult(data);
+      document.getElementById('resultContent').innerHTML = content;
+      openModal('resultModal');
+    }
+
+    function formatResult(data) {
+      if (data.error) {
+        return `<div class="alert alert-danger"><strong>Error:</strong> ${data.error}</div>`;
+      }
+
+      let html = '<div class="result-container">';
+      
+      // Check if it's an array
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
+          return '<div class="alert alert-info">No results found</div>';
+        }
+        html += '<div class="table-responsive"><table class="table table-striped">';
+        const keys = Object.keys(data[0]);
+        html += '<thead><tr>';
+        keys.forEach(key => {
+          html += `<th>${formatKey(key)}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+        data.forEach(item => {
+          html += '<tr>';
+          keys.forEach(key => {
+            html += `<td>${formatValue(item[key])}</td>`;
+          });
+          html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+      } 
+      // Check if it's an object
+      else if (typeof data === 'object' && data !== null) {
+        html += '<div class="row">';
+        Object.keys(data).forEach(key => {
+          html += `
+            <div class="col-md-6 mb-3">
+              <label class="fw-bold text-muted">${formatKey(key)}</label>
+              <div class="p-2 bg-light rounded">${formatValue(data[key])}</div>
+            </div>
+          `;
+        });
+        html += '</div>';
+      }
+      // Primitive values
+      else {
+        html += `<div class="alert alert-success">${formatValue(data)}</div>`;
+      }
+      
+      html += '</div>';
+      return html;
+    }
+
+    function formatKey(key) {
+      return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatValue(value) {
+      if (value === null || value === undefined) {
+        return '<span class="text-muted">N/A</span>';
+      }
+      if (typeof value === 'boolean') {
+        return value ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-secondary">No</span>';
+      }
+      if (typeof value === 'number') {
+        return value.toLocaleString();
+      }
+      if (typeof value === 'string') {
+        // Check if it's a date
+        if (value.match(/^\d{4}-\d{2}-\d{2}T/)) {
+          return new Date(value).toLocaleString();
+        }
+        // Check if it's a long string (like DID or hash)
+        if (value.length > 50) {
+          return `<code class="small">${value.substring(0, 30)}...${value.substring(value.length - 15)}</code>`;
+        }
+        return value;
+      }
+      return String(value);
+    }
+
+    // API functions
+    async function createUser() {
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const publicKey = document.getElementById('publicKey').value;
+
+      try {
+        const response = await fetch('/users/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, public_key: publicKey })
+        });
+        const data = await response.json();
+        closeModal('createUserModal');
+        showResult(data, 'User Created Successfully');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function verifyIdentity() {
+      const did = document.getElementById('verifyDid').value;
+      const verificationType = document.getElementById('verificationType').value;
+
+      try {
+        const response = await fetch('/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ did, verification_type: verificationType })
+        });
+        const data = await response.json();
+        closeModal('verifyIdentityModal');
+        showResult(data, 'Identity Verified');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function generateKeys() {
+      try {
+        const response = await fetch('/generate-keys');
+        const data = await response.json();
+        showResult(data, 'Keys Generated');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function getStats() {
+      try {
+        const response = await fetch('/stats');
+        const data = await response.json();
+        showResult(data, 'System Statistics');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function getUserById() {
+      const userId = document.getElementById('userId').value;
+      try {
+        const response = await fetch(`/users/${userId}`);
+        const data = await response.json();
+        closeModal('getUserByIdModal');
+        showResult(data, 'User Details');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function getUserByDid() {
+      const did = document.getElementById('userDid').value;
+      try {
+        const response = await fetch(`/users/did/${did}`);
+        const data = await response.json();
+        closeModal('getUserByDidModal');
+        showResult(data, 'User Details');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function getReputation() {
+      const userId = document.getElementById('reputationUserId').value;
+      try {
+        const response = await fetch(`/users/${userId}/reputation`);
+        const data = await response.json();
+        closeModal('getReputationModal');
+        showResult(data, 'User Reputation');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function createAttestation() {
+      const userId = document.getElementById('attestationUserId').value;
+      const attestationType = document.getElementById('attestationType').value;
+      const data = document.getElementById('attestationData').value;
+      const signature = document.getElementById('attestationSignature').value;
+
+      try {
+        const response = await fetch(`/users/${userId}/attestations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ attestation_type: attestationType, data, signature })
+        });
+        const result = await response.json();
+        closeModal('createAttestationModal');
+        showResult(result, 'Attestation Created');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function getAttestations() {
+      const userId = document.getElementById('attestationsUserId').value;
+      try {
+        const response = await fetch(`/users/${userId}/attestations`);
+        const data = await response.json();
+        closeModal('getAttestationsModal');
+        showResult(data, 'User Attestations');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function createTransaction() {
+      const userId = document.getElementById('transactionUserId').value;
+      const transactionType = document.getElementById('transactionType').value;
+      const amount = document.getElementById('transactionAmount').value;
+      const description = document.getElementById('transactionDescription').value;
+
+      try {
+        const response = await fetch(`/users/${userId}/tokens`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ transaction_type: transactionType, amount: parseFloat(amount), description })
+        });
+        const data = await response.json();
+        closeModal('createTransactionModal');
+        showResult(data, 'Transaction Created');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function getTransactions() {
+      const userId = document.getElementById('transactionsUserId').value;
+      try {
+        const response = await fetch(`/users/${userId}/tokens`);
+        const data = await response.json();
+        closeModal('getTransactionsModal');
+        showResult(data, 'User Transactions');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    async function systemUpdate() {
+      try {
+        const response = await fetch('/system/update', { method: 'POST' });
+        const data = await response.json();
+        showResult(data, 'System Update');
+      } catch (error) {
+        showResult({ error: error.message }, 'Error');
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
   </script>
 </body>
 </html>

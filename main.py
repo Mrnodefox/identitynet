@@ -29,6 +29,7 @@ from schemas import (
     TokenTransactionCreate, TokenTransactionResponse,
     IdentityVerificationRequest
 )
+from node_manager import node_manager
 
 try:
     import ipfshttpclient
@@ -95,10 +96,13 @@ SIGNATURE_TOLERANCE_SECONDS = 300  # 5 minutes
 async def lifespan(app: FastAPI):
     # Startup
     init_db()
+    # Initialize distributed node manager
+    await node_manager.initialize()
     yield
-    # Shutdown (if needed)
+    # Shutdown
+    await node_manager.shutdown()
 
-app = FastAPI(title="IdentityNet API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="IdentityNet API", version="1.0.0", lifespan=lifespan, docs_url=None, redoc_url=None)
 
 # Mount static files
 static_dir = Path(__file__).parent / "static"
@@ -269,6 +273,7 @@ async def generate_keys():
 
 @app.post("/users/create", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    # Check local database first
     existing_user = db.query(User).filter(User.username == user.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
@@ -277,6 +282,12 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         existing_email = db.query(User).filter(User.email == user.email).first()
         if existing_email:
             raise HTTPException(status_code=400, detail="Email already exists")
+    
+    # Check global registry if node manager is available
+    if node_manager._running:
+        username_available = await node_manager.check_username_available(user.username)
+        if not username_available:
+            raise HTTPException(status_code=400, detail="Username already taken globally")
     
     did = generate_did(user.public_key)
     
@@ -295,7 +306,9 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         username=user.username,
         email=user.email,
         public_key=user.public_key,
-        ipfs_hash=ipfs_hash
+        ipfs_hash=ipfs_hash,
+        node_id=node_manager.node_id if node_manager._running else None,
+        synced=node_manager._running
     )
     
     new_reputation = Reputation(user=new_user)
@@ -304,6 +317,21 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_reputation)
     db.commit()
     db.refresh(new_user)
+    
+    # Register username in global registry
+    if node_manager._running:
+        await node_manager.register_username(user.username, did)
+        # Sync user data across nodes
+        user_dict = {
+            "id": new_user.id,
+            "did": new_user.did,
+            "username": new_user.username,
+            "email": new_user.email,
+            "public_key": new_user.public_key,
+            "ipfs_hash": new_user.ipfs_hash,
+            "created_at": new_user.created_at.isoformat() if new_user.created_at else None
+        }
+        await node_manager.sync_user_data(user_dict)
     
     return new_user
 
@@ -421,6 +449,28 @@ async def get_stats(db: Session = Depends(get_db)):
         "total_users": total_users,
         "total_attestations": total_attestations,
         "total_transactions": total_transactions
+    }
+
+@app.get("/node/info")
+async def get_node_info():
+    """Get information about this node"""
+    peers = await node_manager.get_peers() if node_manager._running else []
+    
+    return {
+        "node_id": node_manager.node_id,
+        "running": node_manager._running,
+        "peers": peers,
+        "peer_count": len(peers),
+        "global_username_registry_size": len(node_manager.global_username_registry),
+        "global_did_registry_size": len(node_manager.global_did_registry)
+    }
+
+@app.get("/node/registry")
+async def get_global_registry():
+    """Get the global username registry"""
+    return {
+        "username_registry": node_manager.global_username_registry,
+        "did_registry": node_manager.global_did_registry
     }
 
 @app.post("/system/update")

@@ -197,7 +197,41 @@ Users can earn tokens through:
 - **Authentication**: Cryptographic keys (public/private key pairs)
 - **Identity Standard**: DID (Decentralized Identifier)
 - **Token System**: Built-in token economy for monetization
-- **Decentralization**: Each user runs their own node with local database + IPFS sync
+- **Distributed Network**: IPFS PubSub for real-time node communication
+- **Global Registry**: Shared username and DID registry across all nodes
+- **Node Discovery**: Automatic peer discovery via IPFS pubsub
+- **Data Synchronization**: Real-time sync of user data across nodes
+
+### Distributed Architecture
+
+IdentityNet now uses a truly distributed architecture where all nodes share a global registry:
+
+**Key Features:**
+- **Global Username Namespace**: Usernames are unique across all nodes
+- **Shared DID Registry**: DIDs are tracked globally to prevent conflicts
+- **Real-time Sync**: User data is synchronized across all connected nodes
+- **Node Discovery**: Automatic discovery of other nodes in the network
+- **Peer-to-Peer Communication**: Direct node-to-node communication via IPFS pubsub
+
+**How It Works:**
+1. Each node runs an IPFS daemon with pubsub enabled
+2. Nodes automatically discover peers via the pubsub topic
+3. When a user is created, the username is checked against the global registry
+4. User data is synchronized across all nodes in real-time
+5. Each user record tracks which node created it and sync status
+
+**Setup Requirements:**
+- IPFS daemon must be running with pubsub enabled: `ipfs daemon --enable-pubsub-experiment`
+- Nodes must be able to communicate via IPFS
+- Network connectivity between nodes required
+
+**API Endpoints:**
+- `GET /node/info` - Get node information and peer list
+- `GET /node/registry` - Get global username and DID registry
+
+**Database Schema Updates:**
+- `node_id` - Tracks which node created the user
+- `synced` - Indicates if user data is synced to global registry
 
 ## Security
 
