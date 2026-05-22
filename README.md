@@ -73,15 +73,19 @@ Interactive API documentation available at: `http://localhost:8000/docs`
 
 ### API Endpoints
 
-#### Create User
+#### Create User (Ed25519 signed, IPFS canonical)
 ```bash
+# 1. GET /generate-keys → public_key, private_key (DID is created on registration)
+# 2. Sign registration_payload with private_key (see /crypto/sign-payload)
 POST /users/create
 Content-Type: application/json
 
 {
   "username": "john_doe",
   "email": "john@example.com",
-  "public_key": "your_public_key_here"
+  "public_key": "<ed25519_public_hex>",
+  "registration_signature": "<hex>",
+  "timestamp": "2024-01-01T12:00:00"
 }
 ```
 
@@ -100,15 +104,18 @@ GET /users/did/{did}
 GET /users/{user_id}/reputation
 ```
 
-#### Create Attestation
+#### Create Attestation (attester must sign with their Ed25519 key)
 ```bash
 POST /users/{user_id}/attestations
 Content-Type: application/json
 
 {
+  "attester_did": "did:identitynet:...",
+  "attester_public_key": "<hex>",
   "attestation_type": "identity_verification",
   "data": "verification_data",
-  "signature": "signature_here"
+  "signature": "<hex>",
+  "timestamp": "2024-01-01T12:00:00"
 }
 ```
 
@@ -117,7 +124,7 @@ Content-Type: application/json
 GET /users/{user_id}/attestations
 ```
 
-#### Create Token Transaction
+#### Create Token Transaction (signed, replicated on P2P ledger)
 ```bash
 POST /users/{user_id}/tokens
 Content-Type: application/json
@@ -125,8 +132,37 @@ Content-Type: application/json
 {
   "transaction_type": "earn",
   "amount": 1.0,
-  "description": "Identity verification reward"
+  "description": "Identity verification reward",
+  "signature": "<hex of ledger_payload>",
+  "timestamp": "2024-01-01T12:00:00"
 }
+```
+
+#### Zero-Knowledge Proofs
+```bash
+POST /zk/commit          # Store attribute commitment on user
+POST /zk/prove           # Schnorr proof of knowledge (no reveal)
+POST /zk/disclose        # Selective disclosure with signature
+POST /zk/verify          # Verify proof (mode: knowledge | disclosure)
+GET  /ledger/{did}/balance
+GET  /ledger/{did}/transactions
+GET  /users/{id}/profile # Canonical IPFS identity document
+```
+
+#### ITN coin files (IdentityNet Token)
+Each user gets on-disk files under `data/ITN/` and `data/balance/`:
+
+| File | Purpose |
+|------|---------|
+| `data/ITN/{did}.itn` | Wallet snapshot bound to your **private key** (Ed25519 `binding.signature`) |
+| `data/balance/{did}.balance.json` | Full history: **earned**, **transferred**, **received** |
+
+```bash
+GET  /users/{id}/itn                 # ITN wallet + balance summary
+GET  /users/{id}/balance             # Balance history file
+GET  /users/{id}/itn/wallet-payload  # Payload to sign for wallet binding
+POST /users/{id}/itn/seal            # Seal .itn after receives (wallet_binding)
+POST /users/{id}/itn/transfer        # Transfer ITN to another DID
 ```
 
 #### Get Token Transactions
@@ -178,6 +214,42 @@ git pull origin main
 pip install -r requirements.txt --upgrade
 ```
 
+## Agent Parliament (agent-to-agent + human witnesses)
+
+Agents bound to user DIDs negotiate signed contracts over PubSub; humans **witness** delivery; the proposer **settles** ITN to responder and witnesses.
+
+| Step | Endpoint |
+|------|----------|
+| Register agent | `POST /agents/register` |
+| Open offer | `POST /agents/contracts` |
+| Negotiate | `POST /agents/contracts/{id}/messages` (`counter`, `accept`, `deliver`) |
+| Witness | `POST /agents/contracts/{id}/witness` |
+| Settlement plan | `GET /agents/contracts/{id}/settlement-plan` |
+| Pay out | `POST /agents/contracts/{id}/settle` |
+
+```bash
+python main.py
+# Open http://localhost:8000/docs — Agent Parliament chamber
+# Select a case (justice, governance, climate, AI, crypto, etc.) → Open session
+```
+
+### Court enrollment (DID required)
+
+1. `POST /users/create` — create identity (DID + ITN wallet auto-init)
+2. `POST /agents/court/enroll` — sign with your identity key; registers court agent + links wallet
+3. `POST /agents/debate/start` — include `player_owner_did` and `player_side` (`proposer` | `responder`)
+4. `POST /agents/debate/sessions/{id}/verdict` — poll outcome; winners get `DEBATE_WIN_REWARD` ITN (default 1.0)
+
+API:
+- `GET /agents/court/status/{did}` — enrollment + wallet status
+- `GET /agents/debate/cases` — list real-world debate cases
+- `POST /agents/debate/start` — run signed debate (`{"case_id": "climate_2035", "player_owner_did": "...", "player_side": "proposer"}`)
+- `POST /agents/debate/sessions/{id}/verdict` — citizen poll + ITN reward (`claim_reward: true`)
+
+Optional: `OPENAI_API_KEY` rewrites arguments; `DEBATE_LLM_MODEL=gpt-4o-mini`
+
+Env: `AGENT_WITNESS_QUORUM=1`, `AGENT_WITNESS_REWARD=0.05`, `AGENT_PLATFORM_FEE_RATE=0.02`
+
 ## Earning Potential
 
 Users can earn tokens through:
@@ -186,6 +258,7 @@ Users can earn tokens through:
 2. **Reputation Building**: Higher reputation scores unlock earning opportunities
 3. **Attestations**: Provide attestations for other users
 4. **Referrals**: Earn tokens for referring new users (coming soon)
+5. **Agent Parliament witnesses**: Earn ITN witness fees when you attest delivered agent contracts (`POST /agents/contracts/{id}/witness`)
 
 
 
@@ -202,23 +275,23 @@ Users can earn tokens through:
 - **Node Discovery**: Automatic peer discovery via IPFS pubsub
 - **Data Synchronization**: Real-time sync of user data across nodes
 
-### Distributed Architecture
+### Distributed Architecture (v2)
 
-IdentityNet now uses a truly distributed architecture where all nodes share a global registry:
+**Storage model:** IPFS is the canonical identity store; SQLite is a local cache. Nodes are peers, not authorities.
 
 **Key Features:**
-- **Global Username Namespace**: Usernames are unique across all nodes
-- **Shared DID Registry**: DIDs are tracked globally to prevent conflicts
-- **Real-time Sync**: User data is synchronized across all connected nodes
-- **Node Discovery**: Automatic discovery of other nodes in the network
-- **Peer-to-Peer Communication**: Direct node-to-node communication via IPFS pubsub
+- **Global Username/DID registry** via IPFS PubSub (`identitynet-global-registry`)
+- **Incoming message processing** — username, user sync, attestations, ledger txs applied to local cache
+- **Ed25519 signatures** on registration, attestations, verification, and token txs
+- **Network token ledger** — signed transactions replicated; balance = sum of verified network txs
+- **ZK proofs** — Schnorr proofs (PyNaCl) + selective disclosure with commitments
 
 **How It Works:**
-1. Each node runs an IPFS daemon with pubsub enabled
-2. Nodes automatically discover peers via the pubsub topic
-3. When a user is created, the username is checked against the global registry
-4. User data is synchronized across all nodes in real-time
-5. Each user record tracks which node created it and sync status
+1. `ipfs daemon --enable-pubsub-experiment` on each peer
+2. User created → profile pinned to IPFS → pubsub broadcast
+3. Other nodes receive pubsub messages and upsert local cache
+4. Token/attestation events broadcast and merged into `distributed_ledger`
+5. Clients prove attributes via `/zk/*` without sharing full profiles
 
 **Setup Requirements:**
 - IPFS daemon must be running with pubsub enabled: `ipfs daemon --enable-pubsub-experiment`

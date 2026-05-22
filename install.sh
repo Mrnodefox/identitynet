@@ -71,14 +71,14 @@ fi
 # Install Python dependencies
 echo "Installing Python dependencies..."
 pip install -r requirements.txt
+echo "Starting IPFS with pubsub enabled..."
+pkill -f "ipfs daemon" 2>/dev/null || true
+ipfs daemon --enable-pubsub-experiment > /dev/null 2>&1 &
 
 # Initialize database
 echo "Initializing database..."
 python -c "from database import init_db; init_db()"
 
-# Start IPFS daemon in background
-echo "Starting IPFS daemon..."
-ipfs daemon > /dev/null 2>&1 &
 
 echo "Installation complete!"
 echo ""

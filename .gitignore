@@ -54,3 +54,8 @@ desktop.ini
 # Backup files
 *.backup
 *.bak
+
+# ITN coin files (user wallets)
+data/ITN/
+data/balance/
+data/parliament_chamber.json

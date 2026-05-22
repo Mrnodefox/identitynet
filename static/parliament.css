@@ -1,0 +1,588 @@
+/* Agent Parliament Chamber */
+.parliament-panel {
+  background: linear-gradient(180deg, #1a1209 0%, #2d1f0f 40%, #1a1209 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid #8b6914;
+  color: #f5e6c8;
+}
+
+.parliament-panel-header {
+  background: linear-gradient(90deg, #3d2914, #5c3d1e, #3d2914);
+  padding: 20px 28px;
+  border-bottom: 2px solid #c9a227;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.parliament-panel-header h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #f5d76e;
+  letter-spacing: 0.04em;
+}
+
+.parliament-panel-header .subtitle {
+  font-size: 13px;
+  color: #c4a574;
+  margin: 4px 0 0;
+}
+
+.parliament-badge {
+  background: #8b0000;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.chamber-wrap {
+  padding: 24px;
+  position: relative;
+}
+
+.chamber-arch {
+  height: 48px;
+  background: radial-gradient(ellipse 80% 100% at 50% 100%, #4a3520 0%, transparent 70%);
+  border-top: 3px solid #c9a227;
+  border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+  margin-bottom: -12px;
+  position: relative;
+}
+
+.chamber-arch::after {
+  content: '⚖ AGENT PARLIAMENT IN SESSION ⚖';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #c9a227;
+  white-space: nowrap;
+}
+
+.debate-floor {
+  display: grid;
+  grid-template-columns: 1fr 120px 1fr;
+  gap: 16px;
+  align-items: end;
+  min-height: 220px;
+  background: linear-gradient(180deg, #3d2914 0%, #2a1d10 100%);
+  border: 2px solid #6b5344;
+  border-radius: 12px;
+  padding: 24px 20px 20px;
+  position: relative;
+}
+
+.debate-floor::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 40px,
+    rgba(201, 162, 39, 0.03) 40px,
+    rgba(201, 162, 39, 0.03) 41px
+  );
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.agent-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.35s ease, filter 0.35s ease;
+  z-index: 1;
+}
+
+.agent-pod.speaking {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 20px rgba(245, 215, 110, 0.6));
+}
+
+.agent-pod.opposition.speaking {
+  filter: drop-shadow(0 0 20px rgba(200, 80, 80, 0.5));
+}
+
+.agent-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  border: 3px solid #c9a227;
+  background: linear-gradient(145deg, #5c3d1e, #3d2914);
+  box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.agent-pod.opposition .agent-avatar {
+  border-color: #a63d3d;
+  background: linear-gradient(145deg, #4a2020, #2d1515);
+}
+
+.agent-name {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #f5d76e;
+  text-align: center;
+}
+
+.agent-role {
+  font-size: 11px;
+  color: #a89070;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.speech-bubble {
+  margin-top: 12px;
+  max-width: 100%;
+  min-height: 48px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid #6b5344;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #e8dcc8;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.agent-pod.speaking .speech-bubble {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chamber-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+}
+
+.gavel-block {
+  text-align: center;
+}
+
+.gavel-icon {
+  font-size: 42px;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.gavel-block.bang .gavel-icon {
+  animation: gavel-bang 0.5s ease;
+}
+
+@keyframes gavel-bang {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-25deg) scale(1.1); }
+  50% { transform: rotate(5deg); }
+}
+
+.session-phase {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #c9a227;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.jury-section {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border: 1px solid #6b5344;
+}
+
+.jury-section h4 {
+  font-family: Georgia, serif;
+  font-size: 15px;
+  color: #c9a227;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jury-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 56px;
+}
+
+.juror-seat {
+  width: 52px;
+  height: 64px;
+  background: linear-gradient(180deg, #4a3520, #2d1f10);
+  border: 2px solid #5c4a32;
+  border-radius: 8px 8px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  opacity: 0.35;
+  transition: all 0.4s ease;
+}
+
+.juror-seat.filled {
+  opacity: 1;
+  border-color: #c9a227;
+  box-shadow: 0 0 12px rgba(201, 162, 39, 0.35);
+  animation: juror-enter 0.5s ease;
+}
+
+@keyframes juror-enter {
+  from { transform: translateY(-12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.juror-seat .juror-label {
+  font-size: 8px;
+  color: #a89070;
+  margin-top: 2px;
+}
+
+.debate-transcript {
+  margin: 20px 24px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 1px solid #5c4a32;
+  padding: 12px 16px;
+}
+
+.transcript-line {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  animation: line-in 0.35s ease;
+}
+
+@keyframes line-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.transcript-line.proposer {
+  background: rgba(201, 162, 39, 0.12);
+  border-left: 3px solid #c9a227;
+}
+
+.transcript-line.responder {
+  background: rgba(166, 61, 61, 0.15);
+  border-left: 3px solid #a63d3d;
+}
+
+.transcript-line.clerk {
+  background: rgba(100, 149, 237, 0.1);
+  border-left: 3px solid #6495ed;
+  font-style: italic;
+}
+
+.transcript-line .speaker {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  color: #c9a227;
+}
+
+.transcript-line.responder .speaker { color: #d48484; }
+.transcript-line.clerk .speaker { color: #8ab4f8; }
+
+.parliament-controls {
+  padding: 0 24px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.parliament-controls input {
+  background: #2a1d10;
+  border: 1px solid #6b5344;
+  color: #f5e6c8;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  max-width: 200px;
+}
+
+.parliament-controls .btn-parliament {
+  background: linear-gradient(180deg, #8b6914, #5c3d1e);
+  border: 1px solid #c9a227;
+  color: #fff8e7;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.parliament-controls .btn-parliament:hover {
+  filter: brightness(1.15);
+}
+
+.parliament-controls .btn-parliament.outline {
+  background: transparent;
+  color: #c9a227;
+}
+
+.citizen-poll-section {
+  margin: 0 24px 24px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #2a2218 0%, #1f1810 100%);
+  border: 2px solid #c9a227;
+  border-radius: 12px;
+}
+
+.citizen-poll-section h4 {
+  font-family: Georgia, serif;
+  color: #f5d76e;
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.poll-agent-ask {
+  font-size: 14px;
+  color: #d4c4a8;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border-left: 4px solid #6495ed;
+}
+
+.poll-agent-ask strong {
+  color: #8ab4f8;
+}
+
+.poll-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.poll-option-btn {
+  background: #3d2914;
+  border: 2px solid #6b5344;
+  color: #f5e6c8;
+  padding: 14px 16px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.poll-option-btn:hover {
+  border-color: #c9a227;
+  background: #4a3520;
+}
+
+.poll-option-btn.selected {
+  border-color: #c9a227;
+  background: rgba(201, 162, 39, 0.2);
+  box-shadow: 0 0 16px rgba(201, 162, 39, 0.25);
+}
+
+.poll-option-btn .poll-votes {
+  display: block;
+  font-size: 11px;
+  color: #a89070;
+  margin-top: 6px;
+}
+
+.poll-bar-wrap {
+  margin-top: 16px;
+}
+
+.poll-bar-row {
+  margin-bottom: 10px;
+}
+
+.poll-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #c4a574;
+}
+
+.poll-bar-track {
+  height: 8px;
+  background: #2a1d10;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.poll-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b6914, #c9a227);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.verdict-section {
+  margin: 0 24px 24px;
+  padding: 20px 24px;
+  background: rgba(139, 0, 0, 0.15);
+  border: 2px solid #8b4513;
+  border-radius: 12px;
+  display: none;
+}
+
+.verdict-section.visible {
+  display: block;
+  animation: line-in 0.5s ease;
+}
+
+.verdict-section h4 {
+  font-family: Georgia, serif;
+  color: #f5a0a0;
+  margin: 0 0 12px;
+}
+
+.verdict-outcome {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5d76e;
+  margin-bottom: 12px;
+}
+
+.next-steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.next-steps-list li {
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  border-left: 4px solid #c9a227;
+  font-size: 14px;
+  color: #e8dcc8;
+}
+
+.next-steps-list li .step-api {
+  display: block;
+  font-size: 11px;
+  color: #8ab4f8;
+  margin-top: 4px;
+  font-family: monospace;
+}
+
+.parliament-status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.parliament-status-pill.open { background: #3b5998; color: #fff; }
+.parliament-status-pill.negotiating { background: #d97706; color: #fff; }
+.parliament-status-pill.delivered { background: #059669; color: #fff; }
+.parliament-status-pill.ready_to_settle { background: #7c3aed; color: #fff; }
+.parliament-status-pill.settled { background: #374151; color: #fff; }
+
+.parliament-meta {
+  padding: 12px 24px 20px;
+  font-size: 12px;
+  color: #8a7355;
+  border-top: 1px solid #5c4a32;
+}
+
+/* Court enrollment */
+.court-panel {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 24px 28px;
+  border: 2px solid #8b6914;
+}
+
+.court-panel h3 {
+  font-family: Georgia, serif;
+  color: #3d2914;
+  margin: 0 0 8px;
+}
+
+.court-step {
+  background: #faf8f5;
+  border: 1px solid #e5e0d5;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+
+.court-step-num {
+  display: inline-block;
+  background: #8b6914;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.court-status-ok {
+  color: #059669;
+  font-weight: 600;
+}
+
+.court-status-warn {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.court-did-box {
+  font-family: monospace;
+  font-size: 11px;
+  word-break: break-all;
+  background: #f3f0ea;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-top: 8px;
+}

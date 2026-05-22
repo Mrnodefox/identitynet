@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/parliament.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -281,6 +282,107 @@
       justify-content: flex-end;
       gap: 10px;
     }
+    .itn-panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin: 20px auto;
+      max-width: 1200px;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+    }
+    .itn-panel-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .itn-panel-header h5 {
+      margin: 0;
+      font-weight: 700;
+      color: #374151;
+    }
+    .itn-coin-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+    .itn-balance-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      padding: 28px 32px;
+      color: white;
+      margin-bottom: 20px;
+    }
+    .itn-balance-hero .label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+    .itn-balance-hero .amount {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .itn-stat-card {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid #e5e7eb;
+      height: 100%;
+    }
+    .itn-stat-card .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .itn-stat-card .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #374151;
+    }
+    .itn-stat-card.earned .stat-value { color: #10b981; }
+    .itn-stat-card.transferred .stat-value { color: #ef4444; }
+    .itn-stat-card.received .stat-value { color: #3b82f6; }
+    .itn-entries-table {
+      font-size: 13px;
+      margin-top: 16px;
+    }
+    .itn-entries-table th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #6b7280;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .itn-type-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .itn-type-earned { background: #d1fae5; color: #065f46; }
+    .itn-type-transferred { background: #fee2e2; color: #991b1b; }
+    .itn-type-received { background: #dbeafe; color: #1e40af; }
+    .itn-empty {
+      text-align: center;
+      padding: 32px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    .itn-meta {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 12px;
+    }
   </style>
 </head>
 <body>
@@ -288,13 +390,78 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-8">
-          <h1>IdentityNet API</h1>
-          <p class="text-muted mb-0">Decentralized Identity & Reputation System</p>
+          <h1>IdentityNet</h1>
+          <p class="text-muted mb-0">Decentralized Identity & Reputation · <strong>Agent Parliament</strong> chamber below</p>
         </div>
         <div class="col-md-4 text-end">
           <a href="/" class="btn btn-primary me-2">Home</a>
           <a href="/docs" class="btn btn-outline-primary">Docs</a>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="itn-panel" id="itnPanel">
+    <div class="itn-panel-header">
+      <div class="d-flex align-items-center gap-2">
+        <h5>ITN Wallet</h5>
+        <span class="itn-coin-badge">ITN</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <input type="number" class="form-control form-control-sm" id="itnUserId" placeholder="User ID" style="width: 100px;" min="1">
+        <button type="button" class="btn btn-sm btn-primary" onclick="loadItnWallet()">Load wallet</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadItnWallet(true)">Refresh</button>
+      </div>
+    </div>
+
+    <div id="itnPanelBody">
+      <div class="itn-empty" id="itnPlaceholder">
+        Enter your User ID and click <strong>Load wallet</strong> to view earned, transferred, and received ITN.
+      </div>
+      <div id="itnContent" style="display: none;">
+        <div class="itn-balance-hero">
+          <div class="label">Total balance</div>
+          <div class="amount"><span id="itnBalanceAmount">0</span> <span style="font-size: 20px; font-weight: 600;">ITN</span></div>
+          <div class="mt-2 d-flex flex-wrap gap-2 align-items-center">
+            <span id="itnBindingBadge" class="badge bg-light text-dark">—</span>
+            <span class="small opacity-75" id="itnDidShort"></span>
+          </div>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="itn-stat-card earned">
+              <div class="stat-label">Earned</div>
+              <div class="stat-value" id="itnEarned">0</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="itn-stat-card transferred">
+              <div class="stat-label">Transferred</div>
+              <div class="stat-value" id="itnTransferred">0</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="itn-stat-card received">
+              <div class="stat-label">Received</div>
+              <div class="stat-value" id="itnReceived">0</div>
+            </div>
+          </div>
+        </div>
+        <h6 class="text-muted mb-2">Recent activity</h6>
+        <div class="table-responsive">
+          <table class="table table-sm itn-entries-table mb-0">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>When</th>
+              </tr>
+            </thead>
+            <tbody id="itnEntriesBody"></tbody>
+          </table>
+        </div>
+        <p class="itn-meta mb-0" id="itnMeta"></p>
       </div>
     </div>
   </div>
@@ -366,6 +533,13 @@
         </div>
       </div>
       <div class="col-md-3">
+        <div class="quick-action-card" onclick="document.getElementById('itnUserId').focus(); document.getElementById('itnPanel').scrollIntoView({behavior:'smooth'}); loadItnWallet();">
+          <div class="icon">🪙</div>
+          <div class="title">ITN Wallet</div>
+          <div class="description">View earned & balance</div>
+        </div>
+      </div>
+      <div class="col-md-3">
         <div class="quick-action-card" onclick="openModal('createTransactionModal')">
           <div class="icon">💰</div>
           <div class="title">Create Transaction</div>
@@ -386,8 +560,144 @@
           <div class="description">Update the system</div>
         </div>
       </div>
+      <div class="col-md-3">
+        <div class="quick-action-card" onclick="document.getElementById('parliamentChamber').scrollIntoView({behavior:'smooth'});">
+          <div class="icon">⚖️</div>
+          <div class="title">Agent Parliament</div>
+          <div class="description">Real-world case debates</div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Court enrollment (DID required) -->
+  <section id="courtPanel" class="court-panel">
+    <h3>⚖ Enter the Court</h3>
+    <p class="text-muted small mb-3">You must have an identity (DID) before your agent can argue cases. Enrollment links your DID to an ITN wallet and a court agent — win debates to earn rewards.</p>
+
+    <div class="court-step">
+      <span class="court-step-num">1</span><strong>Create identity</strong>
+      <p class="small text-muted mb-2 mt-1">Generate keys and register (or load saved identity).</p>
+      <div class="d-flex flex-wrap gap-2 mb-2">
+        <button type="button" class="btn btn-sm btn-outline-primary" id="btnCourtGenKeys">Generate keys</button>
+        <button type="button" class="btn btn-sm btn-primary" id="btnCourtRegister">Register identity</button>
+      </div>
+      <input type="text" class="form-control form-control-sm mb-1" id="courtUsername" placeholder="Username">
+      <input type="text" class="form-control form-control-sm mb-1" id="courtPublicKey" placeholder="Public key (hex)">
+      <input type="password" class="form-control form-control-sm" id="courtPrivateKey" placeholder="Private key (hex) — stays in browser">
+      <div id="courtIdentityStatus" class="small mt-2"></div>
+    </div>
+
+    <div class="court-step">
+      <span class="court-step-num">2</span><strong>Enroll DID as court agent</strong>
+      <p class="small text-muted mb-2 mt-1">Your agent uses the same key as your identity; rewards go to your DID wallet.</p>
+      <input type="text" class="form-control form-control-sm mb-2" id="courtAgentName" placeholder="Agent name (e.g. Counsel_Alex)">
+      <input type="text" class="form-control form-control-sm mb-2" id="courtOwnerDid" placeholder="Your DID (auto-filled after register)">
+      <button type="button" class="btn btn-sm btn-warning text-dark" id="btnCourtEnroll" disabled>Enroll in court</button>
+      <div id="courtEnrollStatus" class="small mt-2"></div>
+      <div id="courtWalletBox" class="court-did-box" style="display:none;"></div>
+    </div>
+
+    <div class="court-step">
+      <span class="court-step-num">3</span><strong>Argue a case</strong>
+      <p class="small text-muted mb-2 mt-1">Choose which side your counsel represents, then open a session below.</p>
+      <div class="d-flex gap-3 mb-0">
+        <label class="small"><input type="radio" name="playerSide" value="proposer" checked> Government / Proposer</label>
+        <label class="small"><input type="radio" name="playerSide" value="responder"> Opposition / Responder</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Parliament Chamber -->
+  <section id="parliamentChamber" class="parliament-panel">
+    <div class="parliament-panel-header">
+      <div>
+        <span class="parliament-badge">In Session</span>
+        <h2>Agent Parliament</h2>
+        <p class="subtitle">Agents argue contracts · Jury attests · Citizens poll · Chamber decides what's next</p>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span id="parliamentStatusPill" class="parliament-status-pill open">open</span>
+        <span id="parliamentStatsLine" class="small text-muted" style="color:#a89070!important"></span>
+      </div>
+    </div>
+
+    <div class="chamber-wrap">
+      <div class="chamber-arch"></div>
+      <div class="debate-floor">
+        <div class="agent-pod" id="agentProposer">
+          <div class="agent-avatar">🤖</div>
+          <div class="agent-name" id="agentProposerName">Agent Proposer</div>
+          <div class="agent-role">Proposer · Government</div>
+          <div class="speech-bubble" id="bubbleProposer">Awaiting session…</div>
+        </div>
+        <div class="chamber-center">
+          <div class="gavel-block" id="gavelBlock">
+            <span class="gavel-icon" id="gavel">🔨</span>
+          </div>
+          <div class="session-phase" id="sessionPhase">Idle</div>
+        </div>
+        <div class="agent-pod opposition" id="agentResponder">
+          <div class="agent-avatar">🛡️</div>
+          <div class="agent-name" id="agentResponderName">Agent Respondent</div>
+          <div class="agent-role">Responder · Opposition</div>
+          <div class="speech-bubble" id="bubbleResponder">Awaiting session…</div>
+        </div>
+      </div>
+
+      <div class="jury-section">
+        <h4>⚖ Jury of the Chamber <span class="small fw-normal" style="color:#8a7355">— witnesses take their seats</span></h4>
+        <div class="jury-gallery" id="juryGallery"></div>
+      </div>
+    </div>
+
+    <div class="debate-transcript" id="debateTranscript" aria-label="Debate transcript"></div>
+
+    <div class="parliament-case-picker" style="padding:0 24px 12px;">
+      <label class="small d-block mb-1" style="color:#c9a227;font-weight:600;">REAL-WORLD CASE</label>
+      <select id="debateCaseSelect" class="form-select form-select-sm" style="max-width:100%;background:#2a1d10;border-color:#6b5344;color:#f5e6c8;"></select>
+      <p id="caseSummaryBox" class="small mt-2 mb-0" style="color:#a89070;line-height:1.45;"></p>
+      <label class="small mt-2 d-flex align-items-center gap-2" style="color:#8a7355;">
+        <input type="checkbox" id="useLlmDebate" style="accent-color:#c9a227;">
+        Optional: rewrite arguments with OpenAI (set OPENAI_API_KEY)
+      </label>
+    </div>
+
+    <div class="parliament-controls">
+      <button type="button" class="btn-parliament" id="btnParliamentPlay">▶ Open session (real debate)</button>
+      <button type="button" class="btn-parliament outline" id="btnParliamentStop">⏸ Pause playback</button>
+      <button type="button" class="btn-parliament outline" id="btnParliamentReset">↺ Reset</button>
+      <input type="text" id="pollContractId" placeholder="Contract ID (reload)">
+      <button type="button" class="btn-parliament outline" id="btnParliamentLoad">Reload contract</button>
+    </div>
+
+    <div class="citizen-poll-section" id="citizenPollSection">
+      <h4>🗳 Citizen Poll — the agents put the case to you</h4>
+      <div class="poll-agent-ask" id="pollAgentAsk">
+        <strong>Agents → Citizens:</strong> Cast your vote after the debate. The chamber will determine the next motion.
+      </div>
+      <div class="mb-2">
+        <label class="small" style="color:#a89070">Your voter ID (any label)</label>
+        <input type="text" id="pollVoterId" class="form-control form-control-sm mt-1" placeholder="citizen_1" style="max-width:200px;background:#2a1d10;border-color:#6b5344;color:#f5e6c8">
+      </div>
+      <div class="poll-options-grid" id="pollOptionsGrid"></div>
+      <div class="d-flex gap-2 flex-wrap">
+        <button type="button" class="btn-parliament" id="btnCastVote">Cast vote</button>
+        <button type="button" class="btn-parliament outline" id="btnDetermineVerdict">Tally &amp; proclaim verdict</button>
+      </div>
+      <div class="poll-bar-wrap" id="pollBarWrap"></div>
+    </div>
+
+    <div class="verdict-section" id="verdictSection">
+      <h4>📜 Clerk's determination — what happens next</h4>
+      <div class="verdict-outcome" id="verdictOutcome"></div>
+      <ul class="next-steps-list" id="nextStepsList"></ul>
+    </div>
+
+    <div class="parliament-meta" id="parliamentContractMeta">
+      Select a case (trafficking, governance, climate 2035, AI, crypto, etc.) then Open session
+    </div>
+  </section>
 
   <!-- Modals -->
   <div id="createUserModal" class="modal" style="display: none;">
@@ -642,6 +952,8 @@
 
   <div id="swagger-ui"></div>
   <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script src="/static/court.js"></script>
+  <script src="/static/parliament.js"></script>
   <script>
     const ui = SwaggerUIBundle({
       url: "{{ openapi_url }}",
@@ -750,13 +1062,30 @@
         if (value.match(/^\d{4}-\d{2}-\d{2}T/)) {
           return new Date(value).toLocaleString();
         }
-        // Check if it's a long string (like DID or hash)
+        // Check if it's a key (public_key or private_key) - show full value
+        if (value.length === 64 && /^[a-f0-9]{64}$/.test(value)) {
+          return `<code class="small" style="word-break: break-all;">${value}</code>`;
+        }
+        // Check if it's a long string (like DID or hash) - truncate with copy button
         if (value.length > 50) {
-          return `<code class="small">${value.substring(0, 30)}...${value.substring(value.length - 15)}</code>`;
+          return `
+            <div>
+              <code class="small">${value.substring(0, 30)}...${value.substring(value.length - 15)}</code>
+              <button onclick="copyToClipboard('${value}')" class="btn btn-sm btn-outline-secondary ms-2" style="font-size: 11px;">Copy</button>
+            </div>
+          `;
         }
         return value;
       }
       return String(value);
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+      });
     }
 
     // API functions
@@ -801,7 +1130,16 @@
       try {
         const response = await fetch('/generate-keys');
         const data = await response.json();
-        showResult(data, 'Keys Generated');
+        const pkField = document.getElementById('publicKey');
+        if (pkField && data.public_key) {
+          pkField.value = data.public_key;
+        }
+        showResult({
+          public_key: data.public_key,
+          private_key: data.private_key,
+          note: 'Your DID is generated when you create a user with this public_key (POST /users/create).',
+          warning: data.warning
+        }, 'Keys Generated');
       } catch (error) {
         showResult({ error: error.message }, 'Error');
       }
@@ -900,6 +1238,7 @@
         const data = await response.json();
         closeModal('createTransactionModal');
         showResult(data, 'Transaction Created');
+        maybeRefreshItnPanel(userId);
       } catch (error) {
         showResult({ error: error.message }, 'Error');
       }
@@ -926,6 +1265,110 @@
         showResult({ error: error.message }, 'Error');
       }
     }
+
+    // ITN Wallet panel
+    function itnTypeBadge(type) {
+      const cls = type === 'earned' ? 'itn-type-earned' : type === 'transferred' ? 'itn-type-transferred' : 'itn-type-received';
+      return `<span class="itn-type-badge ${cls}">${type}</span>`;
+    }
+
+    function formatItnTime(ts) {
+      if (!ts) return '—';
+      try { return new Date(ts).toLocaleString(); } catch { return ts; }
+    }
+
+    function renderItnPanel(data) {
+      document.getElementById('itnPlaceholder').style.display = 'none';
+      document.getElementById('itnContent').style.display = 'block';
+
+      const summary = (data.balance && data.balance.summary) || {};
+      const wallet = data.wallet || {};
+      const entries = (data.balance && data.balance.entries) || [];
+
+      document.getElementById('itnBalanceAmount').textContent =
+        (summary.balance != null ? summary.balance : wallet.balance || 0).toLocaleString(undefined, { maximumFractionDigits: 8 });
+      document.getElementById('itnEarned').textContent = (summary.earned || 0).toLocaleString(undefined, { maximumFractionDigits: 8 });
+      document.getElementById('itnTransferred').textContent = (summary.transferred || 0).toLocaleString(undefined, { maximumFractionDigits: 8 });
+      document.getElementById('itnReceived').textContent = (summary.received || 0).toLocaleString(undefined, { maximumFractionDigits: 8 });
+
+      const bindingBadge = document.getElementById('itnBindingBadge');
+      if (data.binding_valid) {
+        bindingBadge.className = 'badge bg-success';
+        bindingBadge.textContent = 'Sealed (key-bound)';
+      } else if (wallet.binding_status === 'pending_seal') {
+        bindingBadge.className = 'badge bg-warning text-dark';
+        bindingBadge.textContent = 'Pending seal';
+      } else {
+        bindingBadge.className = 'badge bg-secondary';
+        bindingBadge.textContent = 'Not sealed';
+      }
+
+      const did = data.did || wallet.did || '';
+      document.getElementById('itnDidShort').textContent = did.length > 40
+        ? did.substring(0, 22) + '…' + did.substring(did.length - 12) : did;
+
+      const tbody = document.getElementById('itnEntriesBody');
+      const sorted = [...entries].sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+      const recent = sorted.slice(0, 12);
+      if (recent.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-3">No transactions yet</td></tr>';
+      } else {
+        tbody.innerHTML = recent.map(e => `
+          <tr>
+            <td>${itnTypeBadge(e.type || 'earned')}</td>
+            <td><strong>${Number(e.amount).toLocaleString(undefined, { maximumFractionDigits: 8 })}</strong></td>
+            <td class="text-muted">${e.description || e.counterparty_did || '—'}</td>
+            <td class="text-nowrap">${formatItnTime(e.timestamp)}</td>
+          </tr>
+        `).join('');
+      }
+
+      document.getElementById('itnMeta').textContent =
+        `${entries.length} total entries · Wallet: ${data.wallet_file || '—'}`;
+    }
+
+    function maybeRefreshItnPanel(userId) {
+      const itnId = document.getElementById('itnUserId').value;
+      if (itnId && String(itnId) === String(userId)) {
+        loadItnWallet(true);
+      }
+    }
+
+    async function loadItnWallet(silent) {
+      const userId = document.getElementById('itnUserId').value;
+      if (!userId) {
+        if (!silent) alert('Enter a User ID to load ITN wallet');
+        return;
+      }
+      localStorage.setItem('identitynet_itn_user_id', userId);
+      if (!silent) {
+        document.getElementById('itnPlaceholder').innerHTML =
+          '<div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading ITN wallet…';
+        document.getElementById('itnPlaceholder').style.display = 'block';
+        document.getElementById('itnContent').style.display = 'none';
+      }
+      try {
+        const response = await fetch(`/users/${userId}/itn`);
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || response.statusText);
+        }
+        renderItnPanel(data);
+      } catch (error) {
+        document.getElementById('itnPlaceholder').style.display = 'block';
+        document.getElementById('itnContent').style.display = 'none';
+        document.getElementById('itnPlaceholder').innerHTML =
+          `<div class="alert alert-danger mb-0">Could not load wallet: ${error.message}</div>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const saved = localStorage.getItem('identitynet_itn_user_id');
+      if (saved) {
+        document.getElementById('itnUserId').value = saved;
+        loadItnWallet(true);
+      }
+    });
 
     // Close modal when clicking outside
     window.onclick = function(event) {

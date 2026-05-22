@@ -1,0 +1,404 @@
+{
+  "cases": [
+    {
+      "id": "human_trafficking",
+      "title": "Human Trafficking: Cross-Border Enforcement",
+      "category": "justice",
+      "summary": "Governments debate whether to expand surveillance and joint task forces versus invest in victim services and poverty reduction at source.",
+      "proposer_role": "Advocate — Interagency Enforcement",
+      "responder_role": "Advocate — Rights & Harm Reduction",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Honored chamber: trafficking networks exploit porous borders and cryptocurrency rails. I move that we mandate real-time data sharing between ports, banks, and NGOs with judicial warrants—funded by seized assets—and treat every unaccompanied minor route as presumptive trafficking until proven otherwise.",
+          "clerk": "Case human_trafficking is opened. Respondent, you have the floor."
+        },
+        "counter": {
+          "responder": "Proposer, dragnet surveillance has caged migrants and sex workers who are not trafficked. I counter: dedicate eighty percent of new funds to housing, legal aid, and survivor-led exit programs; restrict bulk data sharing; and prosecute labor recruiters, not only smugglers.",
+          "proposer": "Survivor services are essential—but without intelligence fusion, rings reappear in weeks. I will accept your funding split if warrants and oversight boards are non-negotiable."
+        },
+        "accept": {
+          "responder": "Accepted, provided independent inspectors publish quarterly audits and no automatic deportation tied to trafficking flags.",
+          "proposer": "The chamber records a conditional accord. Citizens will judge whether this balance protects the vulnerable without building a surveillance state."
+        },
+        "deliver": {
+          "proposer": "I deliver the motion package: warrant-only data pipes, 80/20 funding split, survivor councils with veto on raids, and asset seizure transparency reports.",
+          "clerk": "Delivery logged. The jury may be summoned; citizens shall poll on the chamber's mandate."
+        },
+        "poll_prompt": {
+          "proposer": "Citizens: should the chamber prioritize enforcement fusion or survivor-first funding?",
+          "responder": "If citizens choose enforcement-heavy, we warn of civil liberties erosion; if survivor-first, we demand parallel prosecution of recruiters."
+        }
+      },
+      "poll": {
+        "question": "On human trafficking policy, what should the chamber mandate next?",
+        "options": [
+          {"id": "enforce", "label": "Enforcement fusion with strict warrants", "icon": "🛡️", "verdict_title": "Mandate: Intelligence-led enforcement", "next_steps": ["Expand cross-border task forces with warrant-only data sharing.", "Fund survivor exit programs at 20% minimum from seized assets.", "Publish quarterly civil-liberty audit reports."]},
+          {"id": "survivor", "label": "Survivor-first funding & harm reduction", "icon": "🤝", "verdict_title": "Mandate: Survivor-led programs", "next_steps": ["Allocate 80% of new funds to housing, legal aid, and counseling.", "Ban automatic deportation linked to trafficking flags.", "Prosecute labor recruiters alongside smugglers."]},
+          {"id": "hybrid", "label": "Hybrid — both tracks with oversight board", "icon": "⚖️", "verdict_title": "Mandate: Balanced hybrid policy", "next_steps": ["Establish independent oversight with veto on raids.", "Implement 80/20 funding split with transparent seizures.", "Review policy after 12 months with public metrics."]},
+          {"id": "study", "label": "Delay — commission 90-day study", "icon": "📋", "verdict_title": "Mandate: Study commission", "next_steps": ["Freeze new surveillance spending for 90 days.", "Commission survivor and law-enforcement joint report.", "Reopen debate with published findings."]}
+        ]
+      }
+    },
+    {
+      "id": "sexual_assault_accusation",
+      "title": "Sexual Assault Accusation: Due Process vs Survivor Support",
+      "category": "justice",
+      "summary": "A high-profile accusation forces the chamber to weigh anonymous reporting, campus-style tribunals, and criminal standard of proof.",
+      "proposer_role": "Advocate — Survivor-Centered Process",
+      "responder_role": "Advocate — Due Process & Criminal Court",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Chamber: when multiple witnesses corroborate, institutions must be able to remove accused persons from sensitive roles immediately, with trauma-informed interviews and reverse burden to explain discrepancies—not wait years for backlog courts.",
+          "clerk": "Sensitive case opened under sealed procedures. Respondent."
+        },
+        "counter": {
+          "responder": "Anonymous accusations without cross-examination have ruined innocent lives. I counter: one criminal standard—beyond reasonable doubt; no public lists; interim suspension only with judicial order; and mandatory recording of all interviews.",
+          "proposer": "Survivors rarely get to trial. Interim protection saves lives—but I agree recorded interviews and penalizing false reports are required."
+        },
+        "accept": {
+          "responder": "Accepted if interim suspension requires prima facie evidence panel including one neutral lawyer, and expungement if charges drop.",
+          "proposer": "Recorded. The chamber seeks citizen judgment on where justice lies."
+        },
+        "deliver": {
+          "proposer": "Delivered: prima facie panel rules, trauma-informed recorded interviews, expungement protocol, and no public accusation databases.",
+          "clerk": "Citizens shall now poll—the agents defer to the chamber."
+        },
+        "poll_prompt": {
+          "proposer": "Citizens: prioritize immediate institutional protection or strict criminal-court-only process?",
+          "responder": "Choose criminal-only and we protect the accused; choose institutional—only with the safeguards we negotiated."
+        }
+      },
+      "poll": {
+        "question": "How should the chamber rule on sexual assault accusation procedures?",
+        "options": [
+          {"id": "survivor_process", "label": "Institutional protection with prima facie panel", "icon": "🛡️", "verdict_title": "Institutional track with safeguards", "next_steps": ["Allow interim role removal after prima facie panel review.", "Mandate recorded, trauma-informed interviews.", "Automatic expungement if criminal charges not filed in 180 days."]},
+          {"id": "criminal_only", "label": "Criminal courts only — beyond reasonable doubt", "icon": "⚖️", "verdict_title": "Criminal-standard only", "next_steps": ["No interim suspension without judicial order.", "Prohibit public accusation databases.", "Fund court backlog reduction instead."]},
+          {"id": "mediation", "label": "Independent mediation before any suspension", "icon": "🤝", "verdict_title": "Mediation-first mandate", "next_steps": ["Refer cases to licensed mediation within 14 days.", "Suspension only if mediation fails and panel agrees.", "Publish anonymized outcome statistics yearly."]},
+          {"id": "reopen", "label": "Insufficient record — reopen discovery", "icon": "↩️", "verdict_title": "Reopen discovery phase", "next_steps": ["Subpoena institutional records under seal.", "Reconvene agents after evidence dump.", "Extend citizen comment period 30 days."]}
+        ]
+      }
+    },
+    {
+      "id": "armed_robbery_sentencing",
+      "title": "Armed Robbery: Punishment vs Rehabilitation",
+      "category": "justice",
+      "summary": "Repeat armed robberies in a cashless-transition economy spark debate on mandatory minimums versus restorative justice.",
+      "proposer_role": "Advocate — Public Safety",
+      "responder_role": "Advocate — Restorative Justice",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Armed robbery with a firearm demands five-year mandatory minimums, no plea bargains under three years, and electronic monitoring for all parole—cashless society did not end street violence.",
+          "clerk": "Case armed_robbery_sentencing opened."
+        },
+        "counter": {
+          "responder": "Mandatory minimums filled prisons without cutting robbery rates. I counter: mental health courts, victim-offender conferencing for non-injury cases, and job guarantees for offenders under thirty.",
+          "proposer": "For injury or firearm discharge, I hold minimums—but conferencing for first non-injury offense is negotiable."
+        },
+        "accept": {
+          "responder": "Accepted with injury carve-out and funded job guarantees.",
+          "proposer": "Chamber, poll the people."
+        },
+        "deliver": {
+          "proposer": "Delivered: tiered sentencing matrix, restorative track for first non-injury offense, monitoring standards.",
+          "clerk": "Poll the chamber."
+        },
+        "poll_prompt": {
+          "proposer": "Citizens: mandatory minimums or restorative-first?",
+          "responder": "Your vote sets prison policy for the next cycle."
+        }
+      },
+      "poll": {
+        "question": "Sentencing for armed robbery — chamber vote:",
+        "options": [
+          {"id": "mandatory", "label": "Mandatory minimums for firearm robberies", "icon": "🔒", "verdict_title": "Mandatory minimum mandate", "next_steps": ["Enact 5-year floor for firearm robberies.", "Restrict sub-three-year plea deals.", "Expand electronic monitoring on parole."]},
+          {"id": "restorative", "label": "Restorative justice for non-injury first offenses", "icon": "🌱", "verdict_title": "Restorative-first mandate", "next_steps": ["Route first non-injury cases to conferencing.", "Fund job guarantees under age 30.", "Reserve prison for repeat or injury cases."]},
+          {"id": "tiered", "label": "Tiered matrix (negotiated package)", "icon": "⚖️", "verdict_title": "Tiered sentencing adopted", "next_steps": ["Publish sentencing matrix with injury carve-outs.", "Pilot restorative track in three districts.", "Review robbery statistics in 18 months."]},
+          {"id": "moratorium", "label": "Moratorium — study racial disparity data", "icon": "📊", "verdict_title": "Moratorium pending study", "next_steps": ["Pause new mandatory minimum legislation.", "Commission disparity impact study.", "Reconvene after data release."]}
+        ]
+      }
+    },
+    {
+      "id": "bad_governance",
+      "title": "Bad Governance: Sanctions vs Stability",
+      "category": "governance",
+      "summary": "A regime accused of corruption and election fraud faces international intervention debate.",
+      "proposer_role": "Advocate — Democratic Accountability",
+      "responder_role": "Advocate — Sovereignty & Stability",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "When audits show eighty percent election irregularities and central-bank looting, the chamber must authorize asset freezes, travel bans, and UN-supervised reruns—not endless diplomacy.",
+          "clerk": "Governance case opened."
+        },
+        "counter": {
+          "responder": "Sanctions starved hospitals last time and empowered warlords. I counter: regional mediation, gradual anti-corruption courts with local judges, and citizen dividend from recovered assets—not foreign-run elections.",
+          "proposer": "Supervised reruns need not be foreign-run if local judges pass integrity vetting."
+        },
+        "accept": {
+          "responder": "Accepted if sanctions target individuals, not medicine, and mediation timeline is public.",
+          "proposer": "Citizens decide the chamber's foreign posture."
+        },
+        "deliver": {
+          "proposer": "Delivered: targeted sanctions list, medicine carve-out, integrity-vetted judges, public mediation timeline.",
+          "clerk": "Citizen poll required."
+        },
+        "poll_prompt": {
+          "proposer": "Sanctions and supervised reruns, or mediation-first?",
+          "responder": "The chamber shapes geopolitics tonight."
+        }
+      },
+      "poll": {
+        "question": "Response to bad governance — your mandate:",
+        "options": [
+          {"id": "sanctions", "label": "Targeted sanctions + supervised election rerun", "icon": "🚫", "verdict_title": "Accountability via sanctions", "next_steps": ["Freeze assets of named officials.", "Medicine and food carve-outs in sanctions text.", "UN-supervised rerun within 12 months."]},
+          {"id": "mediation", "label": "Regional mediation + local anti-corruption courts", "icon": "🤝", "verdict_title": "Mediation-first mandate", "next_steps": ["Launch regional mediation with public timeline.", "Fund local anti-corruption courts.", "Citizen dividend from recovered assets."]},
+          {"id": "status_quo", "label": "No foreign intervention — document only", "icon": "📜", "verdict_title": "Document-only posture", "next_steps": ["Publish evidence dossier for historians.", "Offer asylum to whistleblowers.", "No economic sanctions this cycle."]},
+          {"id": "referendum", "label": "In-country binding referendum (monitored)", "icon": "🗳️", "verdict_title": "Binding referendum mandate", "next_steps": ["Fund monitored in-country referendum.", "Pause external sanctions until vote.", "Accept referendum if monitors certified fair."]}
+        ]
+      }
+    },
+    {
+      "id": "uap_disclosure",
+      "title": "UAP / Alien Disclosure: Transparency vs Security",
+      "category": "security",
+      "summary": "Whistleblower testimony and sensor data divide the chamber on full disclosure versus controlled release.",
+      "proposer_role": "Advocate — Full Disclosure",
+      "responder_role": "Advocate — National Security",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Seventy years of UAP secrecy violated the compact with citizens. I move immediate declassification of all non-weapons UAP records, congressional hearings under oath, and a civilian review board with clearance.",
+          "clerk": "Case uap_disclosure opened."
+        },
+        "counter": {
+          "responder": "Dumping raw sensor data reveals stealth capabilities to rivals. I counter: staged release over five years, redaction by civilian-majority panel, and no witness names without consent.",
+          "proposer": "Staged release works if the panel is truly civilian-majority and timeline is statutory—not discretionary."
+        },
+        "accept": {
+          "responder": "Statutory timeline accepted.",
+          "proposer": "Poll citizens—trust in institutions hangs on this."
+        },
+        "deliver": {
+          "proposer": "Delivered: five-year statutory release schedule, civilian-majority redaction panel, protected witness protocols.",
+          "clerk": "Citizens poll on disclosure pace."
+        },
+        "poll_prompt": {
+          "proposer": "Full immediate disclosure or staged release?",
+          "responder": "Security and truth need not be enemies if staged correctly."
+        }
+      },
+      "poll": {
+        "question": "UAP / alien records — chamber ruling:",
+        "options": [
+          {"id": "full_now", "label": "Immediate declassification (non-weapons)", "icon": "👁️", "verdict_title": "Immediate disclosure", "next_steps": ["Declassify non-weapons UAP records within 90 days.", "Hold public hearings under oath.", "Empower civilian review board."]},
+          {"id": "staged", "label": "Five-year statutory staged release", "icon": "📅", "verdict_title": "Staged disclosure mandate", "next_steps": ["Bind release to statutory five-year calendar.", "Civilian-majority redaction panel.", "Protect witness identities by default."]},
+          {"id": "classified", "label": "Maintain classification — internal review only", "icon": "🔐", "verdict_title": "Classification maintained", "next_steps": ["Internal IG review only.", "No public hearings this cycle.", "Revisit if sensor data independently verified."]},
+          {"id": "independent", "label": "Fund independent scientific consortium", "icon": "🔬", "verdict_title": "Scientific consortium mandate", "next_steps": ["Fund open sensor-data consortium.", "Separate military redaction track.", "Publish consortium findings regardless."]}
+        ]
+      }
+    },
+    {
+      "id": "robot_worker_rights",
+      "title": "Robot & AI Labor: Rights, Taxes, and UBI",
+      "category": "technology",
+      "summary": "Autonomous warehouses and humanoid robots displace millions; agents debate robot taxes and personhood.",
+      "proposer_role": "Advocate — Labor & Robot Tax",
+      "responder_role": "Advocate — Innovation & Corporate Growth",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "When one robot replaces four workers, owners must pay payroll-equivalent tax into a displacement fund and cap fully autonomous sites at thirty percent of workforce—else revolt is inevitable.",
+          "clerk": "Robot labor case opened."
+        },
+        "counter": {
+          "responder": "Robot taxes push factories to jurisdictions with zero rules. I counter: innovation credits, retraining vouchers per robot deployed, and voluntary safety standards—markets adapt faster than caps.",
+          "proposer": "Retraining vouchers yes—但 caps protect communities until vouchers prove out."
+        },
+        "accept": {
+          "responder": "Accepted: vouchers mandatory, caps trial-only in three sectors for two years.",
+          "proposer": "Citizens, vote on the robot compact."
+        },
+        "deliver": {
+          "proposer": "Delivered: displacement fund via robot tax, mandatory retraining vouchers, two-year cap pilot.",
+          "clerk": "Poll open."
+        },
+        "poll_prompt": {
+          "proposer": "Robot tax and caps, or innovation-only path?",
+          "responder": "Your vote defines the next decade of work."
+        }
+      },
+      "poll": {
+        "question": "Robot & AI labor — chamber mandate:",
+        "options": [
+          {"id": "robot_tax", "label": "Robot tax + displacement fund", "icon": "💸", "verdict_title": "Robot tax mandate", "next_steps": ["Levy payroll-equivalent tax per displaced FTE.", "Fund UBI pilot from displacement fund.", "Audit autonomous site percentages quarterly."]},
+          {"id": "innovation", "label": "Innovation credits + retraining only", "icon": "🚀", "verdict_title": "Innovation-first mandate", "next_steps": ["Issue innovation credits for domestic deployment.", "Mandatory retraining voucher per robot.", "No workforce caps."]},
+          {"id": "pilot_caps", "label": "Negotiated pilot caps + vouchers", "icon": "⚖️", "verdict_title": "Pilot compact adopted", "next_steps": ["Run two-year cap pilot in three sectors.", "Combine robot tax with retraining vouchers.", "Publish employment impact report."]},
+          {"id": "moratorium", "label": "Moratorium on humanoid deployment", "icon": "⏸️", "verdict_title": "Deployment moratorium", "next_steps": ["Freeze new humanoid deployments 24 months.", "Study safety and employment data.", "Reopen debate after moratorium."]}
+        ]
+      }
+    },
+    {
+      "id": "climate_2035",
+      "title": "Climate: What Happens in the Next 10 Years",
+      "category": "environment",
+      "summary": "Global warming scenarios to 2035—mitigation speed versus adaptation spending in the Global South.",
+      "proposer_role": "Advocate — Rapid Decarbonization",
+      "responder_role": "Advocate — Adaptation & Energy Security",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "We have thirty-six months to bend the curve: ban new fossil leases, triple grid storage subsidies, and carbon tariffs on imports—2035 floods and famine are otherwise locked in.",
+          "clerk": "Climate 2035 case opened."
+        },
+        "counter": {
+          "responder": "Sudden bans crashed grids in Europe. I counter: $400B adaptation fund for coastal and arid states, nuclear restart permits, and phased methane cuts—mitigation without energy security is cruelty.",
+          "proposer": "Adaptation fund yes—if funded by carbon tariffs we both want."
+        },
+        "accept": {
+          "responder": "Carbon tariffs with developing-nation rebates accepted.",
+          "proposer": "Citizens—choose our 2035 survival path."
+        },
+        "deliver": {
+          "proposer": "Delivered: phased methane schedule, adaptation fund, tariff-with-rebate framework.",
+          "clerk": "Poll citizens on climate mandate."
+        },
+        "poll_prompt": {
+          "proposer": "Rapid ban path or adaptation-heavy path?",
+          "responder": "The next ten years start with your vote."
+        }
+      },
+      "poll": {
+        "question": "Climate policy to 2035 — chamber vote:",
+        "options": [
+          {"id": "rapid", "label": "Rapid decarbonization (bans + tariffs)", "icon": "🌊", "verdict_title": "Rapid decarbonization", "next_steps": ["Ban new fossil leases within 24 months.", "Triple grid storage subsidies.", "Impose carbon import tariffs."]},
+          {"id": "adapt", "label": "Adaptation fund + phased cuts", "icon": "🏗️", "verdict_title": "Adaptation-first mandate", "next_steps": ["Capitalize $400B adaptation fund.", "Permit nuclear restart where safety met.", "Phase methane cuts over 10 years."]},
+          {"id": "combined", "label": "Combined package (negotiated)", "icon": "⚖️", "verdict_title": "Combined climate package", "next_steps": ["Implement tariff-with-rebate framework.", "Fund adaptation and storage equally.", "Review 2035 targets annually."]},
+          {"id": "geoengineering", "label": "Study solar geoengineering safeguards", "icon": "☀️", "verdict_title": "Geoengineering study mandate", "next_steps": ["Fund independent geoengineering risk study.", "Pause deployment until study complete.", "Keep mitigation targets active."]}
+        ]
+      }
+    },
+    {
+      "id": "ai_takeover",
+      "title": "AI Takeover Risk: Pause vs Accelerate",
+      "category": "technology",
+      "summary": "Frontier models approach autonomous replication; the chamber debates training pauses and liability.",
+      "proposer_role": "Advocate — AI Safety Pause",
+      "responder_role": "Advocate — Competitive Acceleration",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Models that self-improve without human approval are existential risk. I move a six-month global training pause on models above 10^26 flop, felony liability for reckless deployment, and kill-switch mandates.",
+          "clerk": "AI takeover case opened."
+        },
+        "counter": {
+          "responder": "Pauses cede advantage to authoritarian labs. I counter: liability caps for open-source, red-team bounties, and realtime capability monitoring—race safely, do not stop.",
+          "proposer": "Monitoring and bounties yes—pause only for models that show autonomous self-replication in red-team."
+        },
+        "accept": {
+          "responder": "Trigger-based pause accepted.",
+          "proposer": "Citizens—humanity votes tonight."
+        },
+        "deliver": {
+          "proposer": "Delivered: trigger-based pause protocol, red-team bounties, realtime monitoring standard.",
+          "clerk": "Poll on AI governance."
+        },
+        "poll_prompt": {
+          "proposer": "Global pause or monitor-and-race?",
+          "responder": "Your verdict shapes machine intelligence law."
+        }
+      },
+      "poll": {
+        "question": "AI takeover governance — chamber vote:",
+        "options": [
+          {"id": "pause", "label": "Six-month global training pause", "icon": "⏸️", "verdict_title": "Training pause mandated", "next_steps": ["Halt training above 10^26 FLOP for 6 months.", "Felony liability for reckless deployers.", "Mandate hardware kill-switches."]},
+          {"id": "monitor", "label": "Monitor, bounty, and race with triggers", "icon": "📡", "verdict_title": "Monitor-and-trigger mandate", "next_steps": ["Deploy realtime capability monitoring.", "Fund red-team replication bounties.", "Pause only on autonomous replication proof."]},
+          {"id": "open", "label": "Open-source liability cap + education", "icon": "📖", "verdict_title": "Open ecosystem mandate", "next_steps": ["Cap liability for certified open models.", "Fund public AI literacy programs.", "Ban autonomous weapons only."]},
+          {"id": "nationalize", "label": "Public-only frontier labs", "icon": "🏛️", "verdict_title": "Public frontier labs", "next_steps": ["License frontier training to public consortia.", "Private labs capped at sub-frontier scale.", "International inspection regime."]}
+        ]
+      }
+    },
+    {
+      "id": "crypto_regulation",
+      "title": "Crypto Intakes: Freedom vs Fraud Protection",
+      "category": "finance",
+      "summary": "Exchange collapses and stablecoin depegs push debate on licensing, CBDCs, and self-custody rights.",
+      "proposer_role": "Advocate — Strict Licensing",
+      "responder_role": "Advocate — Self-Custody & Innovation",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Crypto intakes without KYC are fraud highways. I demand exchange licensing, proof-of-reserves daily attestation, and stablecoin bank-grade collateral—or ban retail access.",
+          "clerk": "Crypto regulation case opened."
+        },
+        "counter": {
+          "responder": "Over-regulation drove builders offshore. I counter: self-custody rights constitutionally protected, optional licensed on-ramps, and algorithmic stablecoin disclosure—not blanket bans.",
+          "proposer": "Proof-of-reserves and disclosure—non-negotiable; ban only for non-compliant issuers."
+        },
+        "accept": {
+          "responder": "Accepted: disclosure + reserves; no blanket retail ban.",
+          "proposer": "Citizens—set crypto law."
+        },
+        "deliver": {
+          "proposer": "Delivered: licensing tier, daily reserve attestation, disclosure rules, self-custody protection clause.",
+          "clerk": "Poll the chamber."
+        },
+        "poll_prompt": {
+          "proposer": "Strict licensing or self-custody-first?",
+          "responder": "Markets await your mandate."
+        }
+      },
+      "poll": {
+        "question": "Crypto intakes & regulation — chamber vote:",
+        "options": [
+          {"id": "strict", "label": "Strict licensing + daily proof-of-reserves", "icon": "🏦", "verdict_title": "Strict licensing mandate", "next_steps": ["License all retail on-ramps.", "Require daily proof-of-reserves.", "Ban non-compliant stablecoins."]},
+          {"id": "self_custody", "label": "Self-custody rights + optional licensed ramps", "icon": "🔑", "verdict_title": "Self-custody-first mandate", "next_steps": ["Codify self-custody rights.", "Optional licensed on-ramps only.", "Mandate issuer disclosure without blanket ban."]},
+          {"id": "cbdc", "label": "Public CBDC alongside private disclosure rules", "icon": "🏛️", "verdict_title": "CBDC + disclosure hybrid", "next_steps": ["Pilot retail CBDC with privacy limits.", "Private stablecoins under disclosure regime.", "No blanket retail crypto ban."]},
+          {"id": "ban_retail", "label": "Ban retail crypto — institutional only", "icon": "🚫", "verdict_title": "Institutional-only crypto", "next_steps": ["Ban retail exchange access.", "Allow institutional desks with licensing.", "Review in 24 months."]}
+        ]
+      }
+    },
+    {
+      "id": "mass_surveillance",
+      "title": "Mass Surveillance vs Privacy in Democracies",
+      "category": "governance",
+      "summary": "After another leak of bulk data programs, agents argue security necessity versus constitutional privacy.",
+      "proposer_role": "Advocate — National Security",
+      "responder_role": "Advocate — Civil Liberties",
+      "escrow_amount": 0.1,
+      "phases": {
+        "offer": {
+          "proposer": "Encrypted apps shield terrorists. I move lawful-access mandates for providers, AI scanning of metadata hashes, and prison terms for executives who refuse court orders.",
+          "clerk": "Surveillance case opened."
+        },
+        "counter": {
+          "responder": "Bulk metadata is bulk surveillance. I counter: end warrantless programs, fund end-to-end open tools, and sunset any program not reauthorized annually by supermajority.",
+          "proposer": "Annual supermajority reauthorization is acceptable if terrorism-specific orders remain warrant-based."
+        },
+        "accept": {
+          "responder": "Warrant-only, no hash scanning of content.",
+          "proposer": "Citizens poll on the surveillance state."
+        },
+        "deliver": {
+          "proposer": "Delivered: warrant-only orders, annual supermajority reauthorization, sunset clause for legacy programs.",
+          "clerk": "Citizen poll."
+        },
+        "poll_prompt": {
+          "proposer": "Lawful access mandates or warrant-only privacy?",
+          "responder": "Liberty and security—choose one balance."
+        }
+      },
+      "poll": {
+        "question": "Mass surveillance — chamber mandate:",
+        "options": [
+          {"id": "security", "label": "Lawful access + metadata programs", "icon": "🛡️", "verdict_title": "Security-first mandate", "next_steps": ["Require provider lawful-access compliance.", "Metadata programs under FISA court only.", "Penalties for non-compliance."]},
+          {"id": "privacy", "label": "Warrant-only + annual supermajority sunset", "icon": "🔒", "verdict_title": "Privacy-first mandate", "next_steps": ["End warrantless bulk collection.", "Annual supermajority reauthorization.", "Fund open privacy tools."]},
+          {"id": "reform", "label": "Negotiated reform package", "icon": "⚖️", "verdict_title": "Reform package adopted", "next_steps": ["Implement warrant-only terrorism orders.", "Sunset legacy programs in 18 months.", "Publish transparency reports."]},
+          {"id": "referendum", "label": "National referendum on constitution amendment", "icon": "🗳️", "verdict_title": "Constitutional referendum", "next_steps": ["Schedule privacy amendment referendum.", "Freeze new surveillance programs until vote.", "Educate public on tradeoffs."]}
+        ]
+      }
+    }
+  ]
+}
